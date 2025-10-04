@@ -89,8 +89,8 @@
                     <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">Connect Wallet</button>
                     <p id="networkStatus" class="text-light-gray text-sm">Click to connect wallet...</p>
                     <div>
-                        <label class="block text-left text-light-gray mb-2">Total ETH Amount</label>
-                        <input id="ethAmount" type="text" placeholder="Enter total ETH amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
+                        <label class="block text-left text-light-gray mb-2">Total GT Amount</label>
+                        <input id="gtAmount" type="text" placeholder="Enter total GT amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
                     </div>
                     <div>
                         <label class="block text-left text-light-gray mb-2">Slippage Tolerance (%)</label>
@@ -129,12 +129,11 @@
         ];
 
         const dualBuyAbi = [
-            {"inputs":[{"internalType":"uint256","name":"woofValue","type":"uint256"},{"internalType":"uint256","name":"woofAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"gateValue","type":"uint256"},{"internalType":"uint256","name":"gateAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"buyOnBoth","outputs":[],"stateMutability":"payable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"woofAmountOut","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"gateAmountOut","type":"uint256"}],"name":"SwapCompleted","type":"event"}
+            {"inputs":[{"internalType":"uint256","name":"woofValue","type":"uint256"},{"internalType":"uint256","name":"woofAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"gateValue","type":"uint256"},{"internalType":"uint256","name":"gateAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"buyOnBoth","outputs":[],"stateMutability":"payable","type":"function"}
         ];
 
         const chains = {
-            RufusChain: {
+            GateLayer: {
                 chainId: 10088,
                 chainName: 'Gate Layer',
                 rpcUrl: 'https://gatelayer-rpc.gatenode.cc',
@@ -152,10 +151,10 @@
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                     account = (await web3.eth.getAccounts())[0];
                     document.getElementById('connectWalletButton').innerText = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
-                    await switchNetwork('RufusChain');
+                    await switchNetwork('GateLayer');
                     await initializeContracts();
                     await checkBalancesAndRatios();
-                    document.getElementById('networkStatus').innerText = 'Connected to Gate Layer';
+                    document.getElementById('networkStatus').innerText = 'Connected to Gate Layer (ID: 10088)';
                 } catch (error) {
                     document.getElementById('networkStatus').innerText = 'Wallet connection failed';
                     document.getElementById('progressStatus').innerText = `Error: Connection failed - ${error.message}`;
@@ -205,9 +204,9 @@
                 return;
             }
             try {
-                const ethBalance = await web3.eth.getBalance(account);
-                const ethBalanceFormatted = Number(web3.utils.fromWei(ethBalance, 'ether')).toLocaleString();
-                document.getElementById('progressStatus').innerText = `ETH Balance: ${ethBalanceFormatted} GT`;
+                const gtBalance = await web3.eth.getBalance(account);
+                const gtBalanceFormatted = Number(web3.utils.fromWei(gtBalance, 'ether')).toLocaleString();
+                document.getElementById('progressStatus').innerText = `GT Balance: ${gtBalanceFormatted}`;
                 await calculateRatios();
             } catch (error) {
                 document.getElementById('buyButton').disabled = true;
@@ -216,8 +215,8 @@
         }
 
         async function calculateRatios() {
-            const ethAmount = document.getElementById('ethAmount').value.trim();
-            if (!ethAmount || isNaN(ethAmount) || ethAmount <= 0) {
+            const gtAmount = document.getElementById('gtAmount').value.trim();
+            if (!gtAmount || isNaN(gtAmount) || gtAmount <= 0) {
                 document.getElementById('buyButton').disabled = true;
                 document.getElementById('woofRatio').innerText = '0%';
                 document.getElementById('gateRatio').innerText = '0%';
@@ -237,13 +236,12 @@
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
 
                 if (web3.utils.toBN(woofReserveGdog).isZero() || web3.utils.toBN(gateReserveGdog).isZero()) {
-                    document.getElementById('networkStatus').innerText = 'Pool not initialized';
+                    document.getElementById('networkStatus').innerText = 'Pool not initialized - check pair addresses';
                     document.getElementById('buyButton').disabled = true;
+                    console.warn('Reserves zero - invalid pair addresses on Gate Layer (10088)');
                     return;
                 }
 
-                const woofPrice = web3.utils.toBN(woofReserveWgt).div(web3.utils.toBN(woofReserveGdog));
-                const gatePrice = web3.utils.toBN(gateReserveWgt).div(web3.utils.toBN(gateReserveGdog));
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
                 const woofRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
                 const gateRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
@@ -251,16 +249,16 @@
                 document.getElementById('woofRatio').innerText = `${(woofRatio * 100).toFixed(2)}%`;
                 document.getElementById('gateRatio').innerText = `${(gateRatio * 100).toFixed(2)}%`;
                 document.getElementById('buyButton').disabled = false;
-                document.getElementById('networkStatus').innerText = `Ratios calculated: WoofSwap ${woofRatio.toFixed(4)}, GateSwap ${gateRatio.toFixed(4)}`;
+                document.getElementById('networkStatus').innerText = `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}% on Gate Layer (10088)`;
             } catch (error) {
-                document.getElementById('networkStatus').innerText = 'Failed to calculate ratios';
-                document.getElementById('progressStatus').innerText = `Error: Ratio calculation failed - ${error.message}`;
+                document.getElementById('networkStatus').innerText = 'Failed to calculate ratios - check network/pair addresses';
+                document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
                 document.getElementById('buyButton').disabled = true;
             }
         }
 
         async function buyGDOG() {
-            const ethAmount = document.getElementById('ethAmount').value.trim();
+            const gtAmount = document.getElementById('gtAmount').value.trim();
             const slippage = document.getElementById('slippage').value.trim();
             const status = document.getElementById('networkStatus');
             const buyButton = document.getElementById('buyButton');
@@ -270,8 +268,8 @@
                 document.getElementById('progressStatus').innerText = 'Error: Wallet not connected';
                 return;
             }
-            if (!ethAmount || isNaN(ethAmount) || ethAmount <= 0 || !slippage || isNaN(slippage) || slippage < 0) {
-                status.innerText = 'Invalid ETH amount or slippage';
+            if (!gtAmount || isNaN(gtAmount) || gtAmount <= 0 || !slippage || isNaN(slippage) || slippage < 0) {
+                status.innerText = 'Invalid GT amount or slippage';
                 document.getElementById('progressStatus').innerText = 'Error: Invalid input';
                 return;
             }
@@ -298,24 +296,24 @@
                 const woofRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
                 const gateRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
 
-                const ethAmountWei = web3.utils.toWei(ethAmount, 'ether');
-                const woofValue = web3.utils.toBN(ethAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000))).div(web3.utils.toBN(1000));
-                const gateValue = web3.utils.toBN(ethAmountWei).mul(web3.utils.toBN(Math.floor(gateRatio * 1000))).div(web3.utils.toBN(1000));
+                const gtAmountWei = web3.utils.toWei(gtAmount, 'ether');
+                const woofValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000))).div(web3.utils.toBN(1000));
+                const gateValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(gateRatio * 1000))).div(web3.utils.toBN(1000));
 
                 const slippagePercent = parseFloat(slippage) / 100;
-                const woofAmountOutMin = web3.utils.toBN(woofReserveGdog).mul(woofValue).div(web3.utils.toBN(woofReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
-                const gateAmountOutMin = web3.utils.toBN(gateReserveGdog).mul(gateValue).div(web3.utils.toBN(gateReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+                const woofAmountOutMin = web3.utils.toBN(woofValue).mul(web3.utils.toBN(woofReserveGdog)).div(web3.utils.toBN(woofReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+                const gateAmountOutMin = web3.utils.toBN(gateValue).mul(web3.utils.toBN(gateReserveGdog)).div(web3.utils.toBN(gateReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
 
                 const tx = await dualBuyContract.methods.buyOnBoth(
                     woofValue,
                     woofAmountOutMin,
                     gateValue,
                     gateAmountOutMin,
-                    Math.floor(Date.now() / 1000) + 60 * 20
+                    Math.floor(Date.now() / 1000) + 60 * 30
                 ).send({
                     from: account,
-                    value: ethAmountWei,
-                    gas: 10000000
+                    value: gtAmountWei,
+                    gas: 800000
                 });
 
                 status.innerText = 'Buy successful!';
@@ -328,6 +326,9 @@
                 } else if (error.message.includes('insufficient funds')) {
                     status.innerText = 'Insufficient GT for gas fees';
                     document.getElementById('progressStatus').innerText = 'Error: Insufficient gas';
+                } else if (error.message.includes('execution reverted')) {
+                    status.innerText = 'Transaction reverted - check pair addresses or network (ID: 10088)';
+                    document.getElementById('progressStatus').innerText = `Error: Reverted - ${error.message}`;
                 } else {
                     status.innerText = 'Buy failed';
                     document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
@@ -340,7 +341,7 @@
 
         document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
         document.getElementById('buyButton').addEventListener('click', buyGDOG);
-        document.getElementById('ethAmount').addEventListener('input', calculateRatios);
+        document.getElementById('gtAmount').addEventListener('input', calculateRatios);
         document.getElementById('slippage').addEventListener('input', calculateRatios);
 
         document.addEventListener('DOMContentLoaded', () => {
