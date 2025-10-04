@@ -305,22 +305,6 @@
                 const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
 
-                const minLiquidity = web3.utils.toWei('1000', 'ether');
-                if (web3.utils.toBN(woofReserveGdog).lt(minLiquidity) || web3.utils.toBN(gateReserveGdog).lt(minLiquidity)) {
-                    document.getElementById('networkStatus').innerText = 'Pool liquidity too low';
-                    document.getElementById('swapButton').disabled = true;
-                    return;
-                }
-
-                const woofPrice = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / Number(web3.utils.fromWei(woofReserveWgt, 'ether'));
-                const gatePrice = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / Number(web3.utils.fromWei(gateReserveWgt, 'ether'));
-                const priceDiff = Math.abs(woofPrice - gatePrice) / Math.min(woofPrice, gatePrice);
-                if (priceDiff > 0.05) {
-                    document.getElementById('networkStatus').innerText = 'Price difference too high';
-                    document.getElementById('swapButton').disabled = true;
-                    return;
-                }
-
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
                 const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
                 const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
@@ -371,18 +355,6 @@
                 const isGateGdogToken0 = gateToken0.toLowerCase() === GDOG.toLowerCase();
                 const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
-
-                const minLiquidity = web3.utils.toWei('1000', 'ether');
-                if (web3.utils.toBN(woofReserveGdog).lt(minLiquidity) || web3.utils.toBN(gateReserveGdog).lt(minLiquidity)) {
-                    throw new Error('Pool liquidity too low');
-                }
-
-                const woofPrice = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / Number(web3.utils.fromWei(woofReserveWgt, 'ether'));
-                const gatePrice = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / Number(web3.utils.fromWei(gateReserveWgt, 'ether'));
-                const priceDiff = Math.abs(woofPrice - gatePrice) / Math.min(woofPrice, gatePrice);
-                if (priceDiff > 0.05) {
-                    throw new Error('Price difference too high');
-                }
 
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
                 const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
