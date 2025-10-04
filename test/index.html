@@ -1118,100 +1118,100 @@
             }
         }
 
-        document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
-        document.getElementById('connectWalletButtonSell').addEventListener('click', initializeWeb3);
-        document.getElementById('swapButton').addEventListener('click', swapGDOG);
-        document.getElementById('approveButton').addEventListener('click', approveGDOG);
-        document.getElementById('swapButtonSell').addEventListener('click', swapGDOGSell);
-        document.getElementById('approveButtonSell').addEventListener('click', approveGDOGSell);
-        document.getElementById('mintButton').addEventListener('click', mintNFT);
-        document.getElementById('redeemButton').addEventListener('click', redeemNFT);
-        document.getElementById('buyButton').addEventListener('click', buyNFT);
-        document.getElementById('batchRedeemButton').addEventListener('click', batchRedeemNFT);
-        document.getElementById('amount').addEventListener('input', checkBalancesAndRatios);
-        document.getElementById('slippage').addEventListener('input', checkBalancesAndRatios);
-        document.getElementById('amountSell').addEventListener('input', checkBalancesAndRatios);
-        document.getElementById('slippageSell').addEventListener('input', checkBalancesAndRatios);
-        document.getElementById('mintAmount').addEventListener('input', checkMintButtonStatus);
-        document.getElementById('tokenId').addEventListener('input', checkMintButtonStatus);
-        document.getElementById('buyButtonMode').addEventListener('click', () => switchMode('buy'));
-        document.getElementById('sellButtonMode').addEventListener('click', () => switchMode('sell'));
-        document.getElementById('gdogArmyButtonMode').addEventListener('click', () => switchMode('gdogArmy'));
-
-        document.getElementById('buyNav').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('buy');
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        document.getElementById('sellNav').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('sell');
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        document.getElementById('gdogArmyNav').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('gdogArmy');
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        document.getElementById('buyNavMobile').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('buy');
-            document.getElementById('mobileMenu').classList.add('hidden');
-            document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        document.getElementById('sellNavMobile').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('sell');
-            document.getElementById('mobileMenu').classList.add('hidden');
-            document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        document.getElementById('gdogArmyNavMobile').addEventListener('click', (e) => {
-            e.preventDefault();
-            switchMode('gdogArmy');
-            document.getElementById('mobileMenu').classList.add('hidden');
-            document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
-            document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        const menuToggle = document.getElementById('menuToggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            menuToggle.innerHTML = mobileMenu.classList.contains('hidden')
-                ? '<i class="fa fa-bars"></i>'
-                : '<i class="fa fa-times"></i>';
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            if (!anchor.id.includes('Nav')) {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    mobileMenu.classList.add('hidden');
-                    menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            }
-        });
-
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-dark/95', 'shadow-lg');
-            } else {
-                navbar.classList.remove('bg-dark/95', 'shadow-lg');
-            }
-        });
-
         document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
+            document.getElementById('connectWalletButtonSell').addEventListener('click', initializeWeb3);
+            document.getElementById('swapButton').addEventListener('click', swapGDOG);
+            document.getElementById('approveButton').addEventListener('click', approveGDOG);
+            document.getElementById('swapButtonSell').addEventListener('click', swapGDOGSell);
+            document.getElementById('approveButtonSell').addEventListener('click', approveGDOGSell);
+            document.getElementById('mintButton').addEventListener('click', mintNFT);
+            document.getElementById('redeemButton').addEventListener('click', redeemNFT);
+            document.getElementById('buyButton').addEventListener('click', buyNFT);
+            document.getElementById('batchRedeemButton').addEventListener('click', batchRedeemNFT);
+            document.getElementById('amount').addEventListener('input', checkBalancesAndRatios);
+            document.getElementById('slippage').addEventListener('input', checkBalancesAndRatios);
+            document.getElementById('amountSell').addEventListener('input', checkBalancesAndRatios);
+            document.getElementById('slippageSell').addEventListener('input', checkBalancesAndRatios);
+            document.getElementById('mintAmount').addEventListener('input', checkMintButtonStatus);
+            document.getElementById('tokenId').addEventListener('input', checkMintButtonStatus);
+            document.getElementById('buyButtonMode').addEventListener('click', () => switchMode('buy'));
+            document.getElementById('sellButtonMode').addEventListener('click', () => switchMode('sell'));
+            document.getElementById('gdogArmyButtonMode').addEventListener('click', () => switchMode('gdogArmy'));
+
+            document.getElementById('buyNav').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('buy');
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            document.getElementById('sellNav').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('sell');
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            document.getElementById('gdogArmyNav').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('gdogArmy');
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            document.getElementById('buyNavMobile').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('buy');
+                document.getElementById('mobileMenu').classList.add('hidden');
+                document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            document.getElementById('sellNavMobile').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('sell');
+                document.getElementById('mobileMenu').classList.add('hidden');
+                document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            document.getElementById('gdogArmyNavMobile').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchMode('gdogArmy');
+                document.getElementById('mobileMenu').classList.add('hidden');
+                document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
+                document.querySelector('#main').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuToggle.innerHTML = mobileMenu.classList.contains('hidden')
+                    ? '<i class="fa fa-bars"></i>'
+                    : '<i class="fa fa-times"></i>';
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                if (!anchor.id.includes('Nav')) {
+                    anchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        mobileMenu.classList.add('hidden');
+                        menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            });
+
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-dark/95', 'shadow-lg');
+                } else {
+                    navbar.classList.remove('bg-dark/95', 'shadow-lg');
+                }
+            });
+
             switchMode('buy');
             checkBalancesAndRatios();
         });
