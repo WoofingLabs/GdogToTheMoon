@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title data-en="GDOG Dual Swap & NFT" data-zh="GDOG 双重交换与NFT">GDOG Dual Swap & NFT</title>
+    <link rel="icon" type="image/jpeg" href="images/gdog_logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0068FF',
+                        secondary: '#18E5A0',
+                        accent: '#FFD700',
+                        dark: '#070808',
+                        'light-gray': '#E5E7EB',
+                        'nft-primary': '#ff9100',
+                        'nft-secondary': '#ff6f61',
+                        'nft-card': '#2c2f48',
+                        'nft-input': '#373b5c'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Changa One', 'system-ui', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulse 4s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow-glow {
+                text-shadow: 0 0 10px rgba(0, 104, 255, 0.5);
+            }
+            .glow-border {
+                box-shadow: 0 0 12px rgba(24, 229, 160, 0.3);
+            }
+            .bg-grid {
+                background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="1" cy="1" r="1" fill="%230068FF" fill-opacity="0.1"/%3E%3C/svg%3E');
+                background-size: 20px 20px;
+            }
+            .nft-container {
+                background: #2c2f48;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                border-radius: 15px;
+                padding: 20px;
+            }
+            .nft-header {
+                background: linear-gradient(90deg, #ff6f61 0%, #ff9100 100%);
+                padding: 12px;
+                border-radius: 15px;
+                text-align: center;
+                font-size: 1.3em;
+                font-weight: 600;
+                margin-bottom: 20px;
+            }
+            .nft-button {
+                padding: 12px;
+                background: #ff9100;
+                color: #ffffff;
+                border: none;
+                border-radius: 15px;
+                cursor: pointer;
+                font-weight: bold;
+                width: 100%;
+                transition: background 0.2s;
+                margin-bottom: 10px;
+            }
+            .nft-button:hover { background: #e68a00; }
+            .nft-button:disabled {
+                background: #4a4f7a;
+                cursor: not-allowed;
+            }
+            .nft-input-box {
+                background: #373b5c;
+                padding: 15px;
+                border-radius: 15px;
+                margin-bottom: 15px;
+            }
+            .nft-input-box label {
+                display: block;
+                font-size: 0.9em;
+                margin-bottom: 5px;
+            }
+            .nft-input-box input {
+                width: 100%;
+                padding: 10px;
+                background: #373b5c;
+                border: none;
+                border-radius: 10px;
+                color: #ffffff;
+                font-size: 1em;
+            }
+            .nft-balance-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.9em;
+                margin-bottom: 10px;
+                color: #ff9100;
+            }
+            .nft-list {
+                background: #373b5c;
+                padding: 15px;
+                border-radius: 15px;
+                margin-top: 20px;
+            }
+            .nft-list h3 {
+                font-size: 1em;
+                margin-bottom: 10px;
+            }
+            .nft-list ul {
+                list-style: none;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+            .nft-list li {
+                display: flex;
+                align-items: center;
+                padding: 5px 0;
+            }
+            .nft-list input[type="checkbox"] {
+                margin-right: 10px;
+            }
+            .nft-image {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+            .nft-download-button {
+                padding: 5px 10px;
+                background: #ff6f61;
+                color: #ffffff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.8em;
+                margin-left: 10px;
+            }
+            .nft-download-button:hover { background: #e65a50; }
+            @media (max-width: 480px) {
+                .nft-container { padding: 15px; }
+                .nft-header { font-size: 1.1em; }
+                .nft-image { width: 30px; height: 30px; }
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Changa+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark text-white font-sans overflow-x-hidden">
+    <header class="fixed w-full z-50 bg-dark/90 backdrop-blur-md transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer hover:text-primary transition-colors">
+                <div class="w-10 h-10 rounded-full overflow-hidden">
+                    <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover">
+                </div>
+                <span class="font-display text-3xl text-primary text-shadow-glow" data-en="GDOG Dual Swap & NFT" data-zh="GDOG 双重交换与NFT">GDOG Dual Swap & NFT</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="langToggle" class="text-primary hover:text-secondary transition-colors">中文</button>
+                <button id="menuToggle" class="md:hidden text-2xl text-primary">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="md:hidden bg-dark/95 absolute w-full top-full py-4 px-4 hidden">
+            <div class="flex flex-col space-y-4">
+                <a href="#swap" class="hover:text-primary transition-colors py-2 text-white" data-en="Swap GDOG" data-zh="交换 GDOG">Swap GDOG</a>
+                <a href="#nft" class="hover:text-primary transition-colors py-2 text-white" data-en="NFT Operations" data-zh="NFT 操作">NFT Operations</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="swap" class="min-h-screen pt-24 pb-16 bg-grid relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-dark pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="w-48 h-48 mx-auto mb-8 animate-float">
+                <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl mb-6 text-primary text-shadow-glow" data-en="Swap GDOG on WoofSwap & GateSwap" data-zh="在 WoofSwap 和 GateSwap 上交换 GDOG">Swap GDOG on WoofSwap & GateSwap</h1>
+            <p class="text-xl md:text-2xl text-light-gray max-w-3xl mx-auto mb-10" data-en="Buy or sell $GDOG with optimized allocation to prevent arbitrage." data-zh="买入或卖出 $GDOG，优化分配以防止套利。">Buy or sell $GDOG with optimized allocation to prevent arbitrage.</p>
+            <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-md mx-auto mb-8">
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-center gap-4">
+                        <button id="buyModeButton" class="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all" data-en="Buy GDOG" data-zh="买入 GDOG">Buy GDOG</button>
+                        <button id="sellModeButton" class="px-6 py-2 bg-dark/80 border border-secondary text-secondary rounded-full font-medium hover:bg-secondary/10 transition-all" data-en="Sell GDOG" data-zh="卖出 GDOG">Sell GDOG</button>
+                    </div>
+                    <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all" data-en="Connect Wallet" data-zh="连接钱包">Connect Wallet</button>
+                    <p id="networkStatus" class="text-light-gray text-sm" data-en="Click to connect wallet..." data-zh="点击连接钱包...">Click to connect wallet...</p>
+                    <div class="flex items-center bg-dark/80 p-3 rounded-lg border border-primary/20">
+                        <i class="fa fa-link text-accent mr-3"></i>
+                        <span class="font-mono text-sm text-white truncate">0xA037355662d34D9B57dE209E22544a4862F5A30c</span>
+                        <button class="ml-3 text-light-gray hover:text-secondary transition-colors" onclick="copyContract()">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                    <p id="balanceStatus" class="text-light-gray text-sm" data-en="GT Balance: 0 | GDOG Balance: 0" data-zh="GT 余额: 0 | GDOG 余额: 0">GT Balance: 0 | GDOG Balance: 0</p>
+                    <button id="approveButton" class="px-6 py-3 bg-secondary text-dark rounded-full font-medium hover:bg-secondary/80 transition-all hidden" data-en="Approve GDOG" data-zh="授权 GDOG">Approve GDOG</button>
+                    <div id="amountInput">
+                        <label id="amountLabel" class="block text-left text-light-gray mb-2" data-en="Total GT Amount" data-zh="总 GT 数量">Total GT Amount</label>
+                        <input id="amount" type="text" placeholder="Enter total GT amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary" data-en="Enter total GT amount" data-zh="输入总 GT 数量">
+                    </div>
+                    <div>
+                        <label class="block text-left text-light-gray mb-2" data-en="Slippage Tolerance (%)" data-zh="滑点容忍度 (%)">Slippage Tolerance (%)</label>
+                        <input id="slippage" type="text" placeholder="Enter slippage (e.g., 1)" value="1" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary" data-en="Enter slippage (e.g., 1)" data-zh="输入滑点 (如 1)">
+                    </div>
+                    <div class="flex justify-between text-light-gray text-sm">
+                        <span data-en="WoofSwap Ratio: " data-zh="WoofSwap 比例: ">WoofSwap Ratio: <span id="woofRatio">0%</span></span>
+                        <span data-en="GateSwap Ratio: " data-zh="GateSwap 比例: ">GateSwap Ratio: <span id="gateRatio">0%</span></span>
+                    </div>
+                    <button id="swapButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled data-en="Buy GDOG" data-zh="买入 GDOG">Buy GDOG</button>
+                    <p id="progressStatus" class="text-light-gray text-sm" data-en="Waiting for action..." data-zh="等待操作...">Waiting for action...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nft" class="min-h-screen py-16 bg-grid relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-nft-primary/10 to-dark pointer-events-none"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="nft-container max-w-md mx-auto">
+                <div class="nft-header" data-en="Gdog Army NFT Operations" data-zh="Gdog Army NFT 操作">Gdog Army NFT Operations</div>
+                <div class="nft-input-box">
+                    <label data-en="Mint NFT Amount" data-zh="铸造 NFT 数量">Mint NFT Amount</label>
+                    <input type="text" id="mintAmount" placeholder="Enter mint NFT amount" data-en="Enter mint NFT amount" data-zh="输入铸造 NFT 数量">
+                    <div class="nft-balance-row"><span data-en="GDOG Balance" data-zh="GDOG 余额">GDOG Balance</span><span id="gdogBalance" data-en="Balance: 0" data-zh="余额: 0">Balance: 0</span></div>
+                    <div class="nft-balance-row"><span data-en="NFT Owned" data-zh="持有 NFT">NFT Owned</span><span id="nftBalance" data-en="Balance: 0" data-zh="余额: 0">Balance: 0</span></div>
+                    <label data-en="Redeem/Buy NFT Token ID" data-zh="赎回/购买 NFT 的 Token ID">Redeem/Buy NFT Token ID</label>
+                    <input type="text" id="tokenId" placeholder="Enter Token ID" data-en="Enter Token ID" data-zh="输入 Token ID">
+                    <button class="nft-button" id="mintButton" disabled data-en="Mint NFT" data-zh="铸造 NFT">Mint NFT</button>
+                    <button class="nft-button" id="redeemButton" disabled data-en="Redeem NFT" data-zh="赎回 NFT">Redeem NFT</button>
+                    <button class="nft-button" id="buyButton" disabled data-en="Buy NFT from Contract" data-zh="从合约购买 NFT">Buy NFT from Contract</button>
+                </div>
+                <div class="nft-list">
+                    <h3 data-en="My NFTs" data-zh="我的 NFT">My NFTs</h3>
+                    <ul id="nftList"></ul>
+                    <button class="nft-button" id="batchRedeemButton" disabled data-en="Batch Redeem Selected NFTs" data-zh="一键赎回选中 NFT">Batch Redeem Selected NFTs</button>
+                </div>
+                <div class="mt-4">
+                    <img src="https://www.woofswap.finance/image/tokens/gdog.png" alt="GDOG" class="w-16 h-16 mx-auto">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark/95 py-12 border-t border-primary/20">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-light-gray text-sm" data-en="© 2025 GDOG. All rights reserved. DYOR and invest responsibly." data-zh="© 2025 GDOG。保留所有权利。请自行研究并谨慎投资。">© 2025 GDOG. All rights reserved. DYOR and invest responsibly.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        const WOOF_ROUTER = '0x5c005d074E25b89db97A32087C06D154D8CB2D5b';
+        const GATE_ROUTER = '0x12814690F59a9CE8bA87dC8cF0692442bAa9C097';
+        const WGT = '0x6803b8E93b13941F6B73b82E324B80251B3dE338';
+        const GDOG = '0xA037355662d34D9B57dE209E22544a4862F5A30c';
+        const WOOF_PAIR = '0x0Dc613Bfe115d8ce00F797618e5B5dD5195e4953';
+        const GATE_PAIR = '0xd4DD8a7F350E2e4A0A06742fAed5577a9C1B2f31';
+        const DUAL_BUY_CONTRACT = '0x470D4Ed82CA401DA6966D028C0aa0478AaC5F7c0';
+        const DUAL_SELL_CONTRACT = '0x73A546e56852E8C9790A6F60B55d18a2CD5CA5bf';
+        const NFT_ADDRESS = '0x37f798E7b84592E68B3b0a38725C47AdBf24F181';
+        const TOKENS_PER_NFT = '100000000000000000000000';
+        const IMAGE_BASE_URL = 'https://www.gdoggate.com/nft/';
+        const DEFAULT_IMAGE = 'https://www.woofswap.finance/image/tokens/gdog.png';
+
+        const pairAbi = [
+            {"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint112","name":"_reserve0","type":"uint112"},{"internalType":"uint112","name":"_reserve1","type":"uint112"},{"internalType":"uint32","name":"_blockTimestampLast","type":"uint32"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"token0","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+        ];
+
+        const erc20Abi = [
+            {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+
+        const dualBuyAbi = [
+            {"inputs":[{"internalType":"uint256","name":"woofValue","type":"uint256"},{"internalType":"uint256","name":"woofAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"gateValue","type":"uint256"},{"internalType":"uint256","name":"gateAmountOutMin","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"buyOnBoth","outputs":[],"stateMutability":"payable","type":"function"}
+        ];
+
+        const dualSellAbi = [
+            {"inputs":[{"internalType":"uint256","name":"gdogAmount","type":"uint256"},{"internalType":"uint256","name":"woofGdogAmount","type":"uint256"},{"internalType":"uint256","name":"woofGtMin","type":"uint256"},{"internalType":"uint256","name":"gateGdogAmount","type":"uint256"},{"internalType":"uint256","name":"gateGtMin","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"sellOnBoth","outputs":[],"stateMutability":"nonpayable","type":"function"}
+        ];
+
+        const nftAbi = [
+            {"inputs":[{"internalType":"uint256","name":"numTokens","type":"uint256"}],"name":"mintWithGDOG","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"mintFromContract","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"redeemGDOG","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+
+        const chains = {
+            GateLayer: {
+                chainId: 10088,
+                chainName: 'Gate Layer',
+                rpcUrl: 'https://gatelayer-mainnet.gatenode.cc',
+                blockExplorer: 'https://www.gatescan.org/gatelayer/',
+                nativeCurrency: { name: 'GT', symbol: 'GT', decimals: 18 }
+            }
+        };
+
+        let web3, account, woofPairContract, gatePairContract, dualBuyContract, dualSellContract, gdogContract, nftContract;
+        let isBuyMode = true;
+        let currentLang = 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+                element.textContent = element.getAttribute(`data-${lang}`);
+                if (element.tagName === 'INPUT') {
+                    element.placeholder = element.getAttribute(`data-${lang}`);
+                }
+            });
+            document.querySelector('html').lang = lang === 'en' ? 'en' : 'zh-CN';
+            document.getElementById('langToggle').textContent = lang === 'en' ? '中文' : 'English';
+            document.getElementById('amountLabel').textContent = isBuyMode ? (lang === 'en' ? 'Total GT Amount' : '总 GT 数量') : (lang === 'en' ? 'Total GDOG Amount' : '总 GDOG 数量');
+            document.getElementById('amount').placeholder = isBuyMode ? (lang === 'en' ? 'Enter total GT amount' : '输入总 GT 数量') : (lang === 'en' ? 'Enter total GDOG amount' : '输入总 GDOG 数量');
+            document.getElementById('swapButton').textContent = isBuyMode ? (lang === 'en' ? 'Buy GDOG' : '买入 GDOG') : (lang === 'en' ? 'Sell GDOG' : '卖出 GDOG');
+        }
+
+        async function waitForTransaction(txHash) {
+            let receipt = null;
+            const maxAttempts = 30;
+            let attempts = 0;
+            while (attempts < maxAttempts) {
+                receipt = await web3.eth.getTransactionReceipt(txHash);
+                if (receipt) {
+                    if (receipt.status) return receipt;
+                    throw new Error(currentLang === 'en' ? `Transaction ${txHash} failed` : `交易 ${txHash} 失败`);
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                attempts++;
+            }
+            throw new Error(currentLang === 'en' ? `Transaction ${txHash} not confirmed after ${maxAttempts} attempts` : `交易 ${txHash} 在 ${maxAttempts} 次尝试后未确认`);
+        }
+
+        async function initializeWeb3() {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    account = (await web3.eth.getAccounts())[0];
+                    document.getElementById('connectWalletButton').innerText = `${currentLang === 'en' ? 'Connected' : '已连接'}: ${account.slice(0, 6)}...${account.slice(-4)}`;
+                    await switchNetwork('GateLayer');
+                    await initializeContracts();
+                    await checkBalancesAndRatios();
+                    document.getElementById('networkStatus').innerText = currentLang === 'en' ? 'Connected to Gate Layer (ID: 10088)' : '已连接到 Gate Layer (ID: 10088)';
+                } catch (error) {
+                    document.getElementById('networkStatus').innerText = currentLang === 'en' ? 'Wallet connection failed' : '钱包连接失败';
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Connection failed - ${error.message}` : `错误：连接失败 - ${error.message}`;
+                }
+            } else {
+                document.getElementById('networkStatus').innerText = currentLang === 'en' ? 'Please install MetaMask' : '请安装 MetaMask';
+            }
+        }
+
+        async function switchNetwork(chain) {
+            const chainConfig = chains[chain];
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: `0x${chainConfig.chainId.toString(16)}` }]
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: `0x${chainConfig.chainId.toString(16)}`,
+                            chainName: chainConfig.chainName,
+                            rpcUrls: [chainConfig.rpcUrl],
+                            nativeCurrency: chainConfig.nativeCurrency,
+                            blockExplorerUrls: [chainConfig.blockExplorer]
+                        }]
+                    });
+                } else {
+                    throw switchError;
+                }
+            }
+        }
+
+        async function initializeContracts() {
+            woofPairContract = new web3.eth.Contract(pairAbi, WOOF_PAIR);
+            gatePairContract = new web3.eth.Contract(pairAbi, GATE_PAIR);
+            dualBuyContract = new web3.eth.Contract(dualBuyAbi, DUAL_BUY_CONTRACT);
+            dualSellContract = new web3.eth.Contract(dualSellAbi, DUAL_SELL_CONTRACT);
+            gdogContract = new web3.eth.Contract(erc20Abi, GDOG);
+            nftContract = new web3.eth.Contract(nftAbi, NFT_ADDRESS);
+        }
+
+        async function checkBalancesAndRatios() {
+            if (!web3 || !account) {
+                document.getElementById('swapButton').disabled = true;
+                document.getElementById('approveButton').classList.add('hidden');
+                document.getElementById('woofRatio').innerText = '0%';
+                document.getElementById('gateRatio').innerText = '0%';
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Wallet not connected' : '错误：钱包未连接';
+                document.getElementById('mintButton').disabled = true;
+                document.getElementById('redeemButton').disabled = true;
+                document.getElementById('buyButton').disabled = true;
+                document.getElementById('batchRedeemButton').disabled = true;
+                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? 'Balance: 0' : '余额: 0';
+                document.getElementById('nftBalance').innerText = currentLang === 'en' ? 'Balance: 0' : '余额: 0';
+                document.getElementById('nftList').innerHTML = `<li>${currentLang === 'en' ? 'Wallet not connected' : '未连接钱包'}</li>`;
+                return;
+            }
+            try {
+                const gtBalance = await web3.eth.getBalance(account);
+                const gdogBalance = await gdogContract.methods.balanceOf(account).call();
+                const nftBalance = await nftContract.methods.balanceOf(account).call();
+                const gtBalanceFormatted = Number(web3.utils.fromWei(gtBalance, 'ether')).toFixed(4);
+                const gdogBalanceFormatted = Number(web3.utils.fromWei(gdogBalance, 'ether')).toLocaleString();
+                document.getElementById('balanceStatus').innerText = currentLang === 'en' ? `GT Balance: ${gtBalanceFormatted} | GDOG Balance: ${gdogBalanceFormatted}` : `GT 余额: ${gtBalanceFormatted} | GDOG 余额: ${gdogBalanceFormatted}`;
+                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? `Balance: ${gdogBalanceFormatted}` : `余额: ${gdogBalanceFormatted}`;
+                document.getElementById('nftBalance').innerText = currentLang === 'en' ? `Balance: ${nftBalance}` : `余额: ${nftBalance}`;
+                await updateNFTList(nftBalance);
+                await checkMintButtonStatus();
+                await checkAllowance();
+                await calculateRatios();
+            } catch (error) {
+                document.getElementById('swapButton').disabled = true;
+                document.getElementById('mintButton').disabled = true;
+                document.getElementById('redeemButton').disabled = true;
+                document.getElementById('buyButton').disabled = true;
+                document.getElementById('batchRedeemButton').disabled = true;
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Balance check failed - ${error.message}` : `错误：余额检查失败 - ${error.message}`;
+                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? 'Balance: Query failed' : '余额: 查询失败';
+                document.getElementById('nftBalance').innerText = currentLang === 'en' ? 'Balance: Query failed' : '余额: 查询失败';
+                document.getElementById('nftList').innerHTML = `<li>${currentLang === 'en' ? 'Query failed' : '查询失败'}</li>`;
+            }
+        }
+
+        async function checkAllowance() {
+            if (!isBuyMode) {
+                try {
+                    const allowance = await gdogContract.methods.allowance(account, DUAL_SELL_CONTRACT).call();
+                    const amount = document.getElementById('amount').value.trim();
+                    const amountWei = amount ? web3.utils.toWei(amount, 'ether') : '0';
+                    if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                        document.getElementById('approveButton').classList.remove('hidden');
+                        document.getElementById('swapButton').disabled = true;
+                    } else {
+                        document.getElementById('approveButton').classList.add('hidden');
+                        document.getElementById('swapButton').disabled = false;
+                    }
+                } catch (error) {
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Allowance check failed - ${error.message}` : `错误：授权检查失败 - ${error.message}`;
+                }
+            } else {
+                document.getElementById('approveButton').classList.add('hidden');
+            }
+        }
+
+        async function approveGDOG() {
+            const amount = document.getElementById('amount').value.trim();
+            if (!amount || isNaN(amount) || amount <= 0) {
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Invalid GDOG amount' : '错误：无效的 GDOG 数量';
+                return;
+            }
+            try {
+                document.getElementById('approveButton').innerHTML = currentLang === 'en' ? 'Approving... <i class="fa fa-spinner fa-spin ml-2"></i>' : '授权中... <i class="fa fa-spinner fa-spin ml-2"></i>';
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                const tx = await gdogContract.methods.approve(DUAL_SELL_CONTRACT, amountWei).send({ from: account, gas: 100000 });
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Approval successful: ${tx.transactionHash}` : `授权成功: ${tx.transactionHash}`;
+                await checkAllowance();
+            } catch (error) {
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Approval failed - ${error.message}` : `错误：授权失败 - ${error.message}`;
+            } finally {
+                document.getElementById('approveButton').innerHTML = currentLang === 'en' ? 'Approve GDOG' : '授权 GDOG';
+            }
+        }
+
+        async function calculateRatios() {
+            const amount = document.getElementById('amount').value.trim();
+            if (!amount || isNaN(amount) || amount <= 0) {
+                document.getElementById('swapButton').disabled = true;
+                document.getElementById('woofRatio').innerText = '0%';
+                document.getElementById('gateRatio').innerText = '0%';
+                return;
+            }
+            try {
+                const woofReserves = await woofPairContract.methods.getReserves().call();
+                const gateReserves = await gatePairContract.methods.getReserves().call();
+                const woofToken0 = await woofPairContract.methods.token0().call();
+                const gateToken0 = await gatePairContract.methods.token0().call();
+
+                const isWoofGdogToken0 = woofToken0.toLowerCase() === GDOG.toLowerCase();
+                const woofReserveGdog = isWoofGdogToken0 ? woofReserves[0] : woofReserves[1];
+                const woofReserveWgt = isWoofGdogToken0 ? woofReserves[1] : woofReserves[0];
+                const isGateGdogToken0 = gateToken0.toLowerCase() === GDOG.toLowerCase();
+                const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
+                const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
+
+                const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
+                const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
+                const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
+
+                document.getElementById('woofRatio').innerText = `${(woofRatio * 100).toFixed(2)}%`;
+                document.getElementById('gateRatio').innerText = `${(gateRatio * 100).toFixed(2)}%`;
+                document.getElementById('swapButton').disabled = false;
+                document.getElementById('networkStatus').innerText = currentLang === 'en' ? `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}%` : `比例: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}%`;
+                if (!isBuyMode) await checkAllowance();
+            } catch (error) {
+                document.getElementById('networkStatus').innerText = currentLang === 'en' ? 'Failed to calculate ratios' : '无法计算比例';
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: ${error.message}` : `错误: ${error.message}`;
+                document.getElementById('swapButton').disabled = true;
+            }
+        }
+
+        async function swapGDOG() {
+            const amount = document.getElementById('amount').value.trim();
+            const slippage = document.getElementById('slippage').value.trim();
+            const status = document.getElementById('networkStatus');
+            const swapButton = document.getElementById('swapButton');
+
+            if (!web3 || !account) {
+                status.innerText = currentLang === 'en' ? 'Please connect wallet' : '请连接钱包';
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Wallet not connected' : '错误：钱包未连接';
+                return;
+            }
+            if (!amount || isNaN(amount) || amount <= 0 || !slippage || isNaN(slippage) || slippage < 0) {
+                status.innerText = currentLang === 'en' ? `Invalid ${isBuyMode ? 'GT' : 'GDOG'} amount or slippage` : `无效的 ${isBuyMode ? 'GT' : 'GDOG'} 数量或滑点`;
+                document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Invalid input' : '错误：无效输入';
+                return;
+            }
+
+            swapButton.disabled = true;
+            swapButton.innerHTML = currentLang === 'en' ? `${isBuyMode ? 'Buying' : 'Selling'}... <i class="fa fa-spinner fa-spin ml-2"></i>` : `${isBuyMode ? '买入中' : '卖出中'}... <i class="fa fa-spinner fa-spin ml-2"></i>`;
+            status.innerText = currentLang === 'en' ? `Executing ${isBuyMode ? 'buy' : 'sell'}...` : `执行 ${isBuyMode ? '买入' : '卖出'}...`;
+            document.getElementById('progressStatus').innerText = currentLang === 'en' ? `${isBuyMode ? 'Buying' : 'Selling'} GDOG...` : `${isBuyMode ? '买入' : '卖出'} GDOG...`;
+
+            try {
+                const woofReserves = await woofPairContract.methods.getReserves().call();
+                const gateReserves = await gatePairContract.methods.getReserves().call();
+                const woofToken0 = await woofPairContract.methods.token0().call();
+                const gateToken0 = await gatePairContract.methods.token0().call();
+
+                const isWoofGdogToken0 = woofToken0.toLowerCase() === GDOG.toLowerCase();
+                const woofReserveGdog = isWoofGdogToken0 ? woofReserves[0] : woofReserves[1];
+                const woofReserveWgt = isWoofGdogToken0 ? woofReserves[1] : woofReserves[0];
+                const isGateGdogToken0 = gateToken0.toLowerCase() === GDOG.toLowerCase();
+                const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
+                const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
+
+                const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
+                const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
+                const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
+
+                if (isBuyMode) {
+                    const gtAmountWei = web3.utils.toWei(amount, 'ether');
+                    const woofValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000000))).div(web3.utils.toBN(1000000));
+                    const gateValue = web3.utils.toBN(gtAmountWei).sub(woofValue);
+
+                    const slippagePercent = parseFloat(slippage) / 100;
+                    const woofAmountOutMin = web3.utils.toBN(woofValue).mul(web3.utils.toBN(woofReserveGdog)).div(web3.utils.toBN(woofReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+                    const gateAmountOutMin = web3.utils.toBN(gateValue).mul(web3.utils.toBN(gateReserveGdog)).div(web3.utils.toBN(gateReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+
+                    const tx = await dualBuyContract.methods.buyOnBoth(
+                        woofValue,
+                        woofAmountOutMin,
+                        gateValue,
+                        gateAmountOutMin,
+                        Math.floor(Date.now() / 1000) + 60 * 30
+                    ).send({
+                        from: account,
+                        value: gtAmountWei,
+                        gas: 800000
+                    });
+
+                    status.innerText = currentLang === 'en' ? 'Buy successful!' : '买入成功！';
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Success: ${tx.transactionHash}` : `成功: ${tx.transactionHash}`;
+                } else {
+                    const gdogAmountWei = web3.utils.toWei(amount, 'ether');
+                    const woofGdogAmount = web3.utils.toBN(gdogAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000000))).div(web3.utils.toBN(1000000));
+                    const gateGdogAmount = web3.utils.toBN(gdogAmountWei).sub(woofGdogAmount);
+
+                    const slippagePercent = parseFloat(slippage) / 100;
+                    const woofGtMin = web3.utils.toBN(woofGdogAmount).mul(web3.utils.toBN(woofReserveWgt)).div(web3.utils.toBN(woofReserveGdog)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+                    const gateGtMin = web3.utils.toBN(gateGdogAmount).mul(web3.utils.toBN(gateReserveWgt)).div(web3.utils.toBN(gateReserveGdog)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
+
+                    const tx = await dualSellContract.methods.sellOnBoth(
+                        gdogAmountWei,
+                        woofGdogAmount,
+                        woofGtMin,
+                        gateGdogAmount,
+                        gateGtMin,
+                        Math.floor(Date.now() / 1000) + 60 * 30
+                    ).send({
+                        from: account,
+                        gas: 800000
+                    });
+
+                    status.innerText = currentLang === 'en' ? 'Sell successful!' : '卖出成功！';
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Success: ${tx.transactionHash}` : `成功: ${tx.transactionHash}`;
+                }
+                await checkBalancesAndRatios();
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'Transaction cancelled by user' : '用户取消了交易';
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Transaction cancelled' : '错误：交易取消';
+                } else if (error.message.includes('insufficient funds')) {
+                    status.innerText = currentLang === 'en' ? `Insufficient ${isBuyMode ? 'GT' : 'GDOG'} for ${isBuyMode ? 'buy' : 'sell'}` : `不足的 ${isBuyMode ? 'GT' : 'GDOG'} 用于 ${isBuyMode ? '买入' : '卖出'}`;
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? 'Error: Insufficient funds' : '错误：资金不足';
+                } else if (error.message.includes('execution reverted')) {
+                    status.innerText = currentLang === 'en' ? 'Transaction reverted' : '交易被撤销';
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Reverted - ${error.message}` : `错误：撤销 - ${error.message}`;
+                } else {
+                    status.innerText = currentLang === 'en' ? `${isBuyMode ? 'Buy' : 'Sell'} failed` : `${isBuyMode ? '买入' : '卖出'} 失败`;
+                    document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: ${error.message}` : `错误: ${error.message}`;
+                }
+            } finally {
+                swapButton.disabled = false;
+                swapButton.innerHTML = currentLang === 'en' ? (isBuyMode ? 'Buy GDOG' : 'Sell GDOG') : (isBuyMode ? '买入 GDOG' : '卖出 GDOG');
+            }
+        }
+
+        function copyContract() {
+            const contract = '0xA037355662d34D9B57dE209E22544a4862F5A30c';
+            navigator.clipboard.writeText(contract).then(() => {
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = currentLang === 'en' ? 'Contract address copied!' : '合约地址已复制！';
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transition = 'opacity 0.3s';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 2000);
+            });
+        }
+
+        function getNFTImage(tokenId) {
+            return `${IMAGE_BASE_URL}${tokenId}.jpg`;
+        }
+
+        async function downloadNFTImage(tokenId) {
+            const status = document.getElementById('networkStatus');
+            const imageUrl = getNFTImage(tokenId);
+            try {
+                const response = await fetch(imageUrl);
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `GdogArmy_NFT_${tokenId}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                status.innerText = currentLang === 'en' ? `NFT ${tokenId} image downloaded successfully!` : `NFT ${tokenId} 图片下载成功！`;
+            } catch (error) {
+                status.innerText = currentLang === 'en' ? `Failed to download NFT ${tokenId} image: ${error.message}` : `下载 NFT ${tokenId} 图片失败: ${error.message}`;
+            }
+        }
+
+        async function updateNFTList(nftBalance) {
+            const nftList = document.getElementById('nftList');
+            nftList.innerHTML = '';
+            if (!web3 || !account || nftBalance == 0) {
+                nftList.innerHTML = `<li>${currentLang === 'en' ? 'No NFTs' : '暂无 NFT'}</li>`;
+                document.getElementById('batchRedeemButton').disabled = true;
+                return;
+            }
+            try {
+                for (let i = 0; i < nftBalance; i++) {
+                    const tokenId = await nftContract.methods.tokenOfOwnerByIndex(account, i).call();
+                    const imageUrl = getNFTImage(tokenId);
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <input type="checkbox" class="nft-checkbox" value="${tokenId}">
+                        <img src="${imageUrl}" alt="NFT ${tokenId}" class="nft-image" onerror="this.src='${DEFAULT_IMAGE}'" onclick="window.open('${imageUrl}', '_blank')">
+                        Token ID: ${tokenId}
+                        <button class="nft-download-button" onclick="downloadNFTImage(${tokenId})">${currentLang === 'en' ? 'Download' : '下载'}</button>
+                    `;
+                    nftList.appendChild(li);
+                }
+                document.getElementById('batchRedeemButton').disabled = false;
+            } catch (error) {
+                nftList.innerHTML = `<li>${currentLang === 'en' ? 'Query NFTs failed' : '查询 NFT 失败'}: ${error.message}</li>`;
+                document.getElementById('batchRedeemButton').disabled = true;
+            }
+        }
+
+        async function checkMintButtonStatus() {
+            if (!web3 || !account) {
+                document.getElementById('mintButton').disabled = true;
+                document.getElementById('redeemButton').disabled = true;
+                document.getElementById('buyButton').disabled = true;
+                document.getElementById('batchRedeemButton').disabled = true;
+                return;
+            }
+            const mintAmount = document.getElementById('mintAmount').value.trim();
+            const tokenId = document.getElementById('tokenId').value.trim();
+            document.getElementById('mintButton').disabled = !mintAmount || isNaN(mintAmount) || mintAmount <= 0;
+            document.getElementById('redeemButton').disabled = !tokenId || isNaN(tokenId);
+            document.getElementById('buyButton').disabled = !tokenId || isNaN(tokenId);
+        }
+
+        async function approveToken(mintAmount) {
+            const status = document.getElementById('networkStatus');
+            const mintButton = document.getElementById('mintButton');
+            try {
+                mintButton.innerHTML = currentLang === 'en' ? 'Approving... <span class="spinner"></span>' : '授权中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Approving GDOG...' : '正在授权 GDOG...';
+                const amountWei = web3.utils.toBN(mintAmount).mul(web3.utils.toBN(TOKENS_PER_NFT));
+                const gasPrice = await web3.eth.getGasPrice();
+                const estimatedGas = await gdogContract.methods.approve(NFT_ADDRESS, amountWei).estimateGas({ from: account });
+                const nativeBalance = await web3.eth.getBalance(account);
+                const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                if (web3.utils.toBN(nativeBalance).lt(gasCost)) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                    return false;
+                }
+                const tx = await gdogContract.methods.approve(NFT_ADDRESS, amountWei).send({
+                    from: account,
+                    gas: web3.utils.toHex(Math.min(estimatedGas * 2, 1000000))
+                });
+                await waitForTransaction(tx.transactionHash);
+                status.innerText = currentLang === 'en' ? 'GDOG approval successful!' : 'GDOG 授权成功！';
+                return true;
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'User cancelled approval' : '用户取消了授权';
+                } else if (error.message.includes('insufficient funds for gas')) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                } else {
+                    status.innerText = currentLang === 'en' ? 'Approval failed, check token address' : '授权失败，请检查代币地址';
+                }
+                return false;
+            } finally {
+                mintButton.innerHTML = currentLang === 'en' ? 'Mint NFT' : '铸造 NFT';
+            }
+        }
+
+        async function mintNFT() {
+            const status = document.getElementById('networkStatus');
+            const mintButton = document.getElementById('mintButton');
+            const mintAmount = document.getElementById('mintAmount').value.trim();
+
+            if (!web3 || !account) {
+                status.innerText = currentLang === 'en' ? 'Please connect wallet' : '请连接钱包';
+                return;
+            }
+            if (!mintAmount || isNaN(mintAmount) || mintAmount <= 0) {
+                status.innerText = currentLang === 'en' ? 'Enter valid mint amount' : '请输入有效的铸造数量';
+                return;
+            }
+
+            try {
+                mintButton.disabled = true;
+                mintButton.innerHTML = currentLang === 'en' ? 'Checking... <span class="spinner"></span>' : '检查中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Checking balance and gas...' : '检查余额和 Gas...';
+
+                const totalTokens = web3.utils.toBN(mintAmount).mul(web3.utils.toBN(TOKENS_PER_NFT));
+                const gdogBalance = await gdogContract.methods.balanceOf(account).call();
+                if (web3.utils.toBN(gdogBalance).lt(totalTokens)) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GDOG balance' : 'GDOG 余额不足';
+                    return;
+                }
+
+                const allowance = await gdogContract.methods.allowance(account, NFT_ADDRESS).call();
+                if (web3.utils.toBN(allowance).lt(totalTokens)) {
+                    const approved = await approveToken(mintAmount);
+                    if (!approved) return;
+                }
+
+                mintButton.innerHTML = currentLang === 'en' ? 'Minting... <span class="spinner"></span>' : '铸造中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Minting NFT...' : '正在铸造 NFT...';
+
+                const gasPrice = await web3.eth.getGasPrice();
+                const estimatedGas = await nftContract.methods.mintWithGDOG(mintAmount).estimateGas({ from: account });
+                const nativeBalance = await web3.eth.getBalance(account);
+                const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                if (web3.utils.toBN(nativeBalance).lt(gasCost)) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                    return;
+                }
+
+                const tx = await nftContract.methods.mintWithGDOG(mintAmount).send({
+                    from: account,
+                    gas: web3.utils.toHex(Math.min(estimatedGas * 2, 3000000))
+                });
+                await waitForTransaction(tx.transactionHash);
+
+                status.innerText = currentLang === 'en' ? 'NFT minted successfully!' : 'NFT 铸造成功！';
+                await checkBalancesAndRatios();
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'User cancelled transaction' : '用户取消了交易';
+                } else if (error.message.includes('insufficient funds for gas')) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                } else {
+                    status.innerText = currentLang === 'en' ? `Mint failed: ${error.message}` : `铸造失败: ${error.message}`;
+                }
+            } finally {
+                mintButton.disabled = false;
+                mintButton.innerHTML = currentLang === 'en' ? 'Mint NFT' : '铸造 NFT';
+            }
+        }
+
+        async function redeemNFT() {
+            const status = document.getElementById('networkStatus');
+            const redeemButton = document.getElementById('redeemButton');
+            const tokenId = document.getElementById('tokenId').value.trim();
+
+            if (!web3 || !account) {
+                status.innerText = currentLang === 'en' ? 'Please connect wallet' : '请连接钱包';
+                return;
+            }
+            if (!tokenId || isNaN(tokenId)) {
+                status.innerText = currentLang === 'en' ? 'Enter valid Token ID' : '请输入有效的 Token ID';
+                return;
+            }
+
+            try {
+                redeemButton.disabled = true;
+                redeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <span class="spinner"></span>' : '赎回中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Checking Token ID and gas...' : '检查 Token ID 和 Gas...';
+
+                const owner = await nftContract.methods.ownerOf(tokenId).call();
+                if (owner.toLowerCase() !== account.toLowerCase()) {
+                    status.innerText = currentLang === 'en' ? 'You are not the owner of this NFT' : '你不是此 NFT 的拥有者';
+                    return;
+                }
+
+                const gasPrice = await web3.eth.getGasPrice();
+                const estimatedGas = await nftContract.methods.redeemGDOG(tokenId).estimateGas({ from: account });
+                const nativeBalance = await web3.eth.getBalance(account);
+                const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                if (web3.utils.toBN(nativeBalance).lt(gasCost)) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                    return;
+                }
+
+                const tx = await nftContract.methods.redeemGDOG(tokenId).send({
+                    from: account,
+                    gas: web3.utils.toHex(Math.min(estimatedGas * 2, 3000000))
+                });
+                await waitForTransaction(tx.transactionHash);
+
+                status.innerText = currentLang === 'en' ? 'NFT redeemed successfully!' : 'NFT 赎回成功！';
+                await checkBalancesAndRatios();
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'User cancelled transaction' : '用户取消了交易';
+                } else if (error.message.includes('insufficient funds for gas')) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                } else {
+                    status.innerText = currentLang === 'en' ? `Redeem failed: ${error.message}` : `赎回失败: ${error.message}`;
+                }
+            } finally {
+                redeemButton.disabled = false;
+                redeemButton.innerHTML = currentLang === 'en' ? 'Redeem NFT' : '赎回 NFT';
+            }
+        }
+
+        async function buyNFT() {
+            const status = document.getElementById('networkStatus');
+            const buyButton = document.getElementById('buyButton');
+            const tokenId = document.getElementById('tokenId').value.trim();
+
+            if (!web3 || !account) {
+                status.innerText = currentLang === 'en' ? 'Please connect wallet' : '请连接钱包';
+                return;
+            }
+            if (!tokenId || isNaN(tokenId)) {
+                status.innerText = currentLang === 'en' ? 'Enter valid Token ID' : '请输入有效的 Token ID';
+                return;
+            }
+
+            try {
+                buyButton.disabled = true;
+                buyButton.innerHTML = currentLang === 'en' ? 'Buying... <span class="spinner"></span>' : '购买中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Checking balance and gas...' : '检查余额和 Gas...';
+
+                const owner = await nftContract.methods.ownerOf(tokenId).call();
+                if (owner.toLowerCase() !== NFT_ADDRESS.toLowerCase()) {
+                    status.innerText = currentLang === 'en' ? 'This NFT is not in the contract' : '此 NFT 不在合约中';
+                    return;
+                }
+
+                const gdogBalance = await gdogContract.methods.balanceOf(account).call();
+                if (web3.utils.toBN(gdogBalance).lt(web3.utils.toBN(TOKENS_PER_NFT))) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GDOG balance' : 'GDOG 余额不足';
+                    return;
+                }
+
+                const allowance = await gdogContract.methods.allowance(account, NFT_ADDRESS).call();
+                if (web3.utils.toBN(allowance).lt(web3.utils.toBN(TOKENS_PER_NFT))) {
+                    const approved = await approveToken('1');
+                    if (!approved) return;
+                }
+
+                const gasPrice = await web3.eth.getGasPrice();
+                const estimatedGas = await nftContract.methods.mintFromContract(tokenId).estimateGas({ from: account });
+                const nativeBalance = await web3.eth.getBalance(account);
+                const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                if (web3.utils.toBN(nativeBalance).lt(gasCost)) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                    return;
+                }
+
+                const tx = await nftContract.methods.mintFromContract(tokenId).send({
+                    from: account,
+                    gas: web3.utils.toHex(Math.min(estimatedGas * 2, 3000000))
+                });
+                await waitForTransaction(tx.transactionHash);
+
+                status.innerText = currentLang === 'en' ? 'NFT purchased successfully!' : 'NFT 购买成功！';
+                await checkBalancesAndRatios();
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'User cancelled transaction' : '用户取消了交易';
+                } else if (error.message.includes('insufficient funds for gas')) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                } else {
+                    status.innerText = currentLang === 'en' ? `Purchase failed: ${error.message}` : `购买失败: ${error.message}`;
+                }
+            } finally {
+                buyButton.disabled = false;
+                buyButton.innerHTML = currentLang === 'en' ? 'Buy NFT from Contract' : '从合约购买 NFT';
+            }
+        }
+
+        async function batchRedeemNFT() {
+            const status = document.getElementById('networkStatus');
+            const batchRedeemButton = document.getElementById('batchRedeemButton');
+            const checkboxes = document.querySelectorAll('.nft-checkbox:checked');
+
+            if (!web3 || !account) {
+                status.innerText = currentLang === 'en' ? 'Please connect wallet' : '请连接钱包';
+                return;
+            }
+            if (checkboxes.length === 0) {
+                status.innerText = currentLang === 'en' ? 'Select at least one NFT' : '请选择至少一个 NFT';
+                return;
+            }
+
+            try {
+                batchRedeemButton.disabled = true;
+                batchRedeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <span class="spinner"></span>' : '赎回中... <span class="spinner"></span>';
+                status.innerText = currentLang === 'en' ? 'Batch redeeming NFTs...' : '正在批量赎回 NFT...';
+
+                let nativeBalance = await web3.eth.getBalance(account);
+                const gasPrice = await web3.eth.getGasPrice();
+
+                for (const checkbox of checkboxes) {
+                    const tokenId = checkbox.value;
+                    const owner = await nftContract.methods.ownerOf(tokenId).call();
+                    if (owner.toLowerCase() !== account.toLowerCase()) {
+                        status.innerText = currentLang === 'en' ? `Token ID ${tokenId} is not your NFT` : `Token ID ${tokenId} 不是你的 NFT`;
+                        return;
+                    }
+
+                    const estimatedGas = await nftContract.methods.redeemGDOG(tokenId).estimateGas({ from: account });
+                    const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                    if (web3.utils.toBN(nativeBalance).lt(gasCost)) {
+                        status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                        return;
+                    }
+
+                    const tx = await nftContract.methods.redeemGDOG(tokenId).send({
+                        from: account,
+                        gas: web3.utils.toHex(Math.min(estimatedGas * 2, 3000000))
+                    });
+                    await waitForTransaction(tx.transactionHash);
+                    nativeBalance = await web3.eth.getBalance(account);
+                }
+
+                status.innerText = currentLang === 'en' ? 'Batch redeem successful!' : '批量赎回成功！';
+                await checkBalancesAndRatios();
+            } catch (error) {
+                if (error.code === 4001) {
+                    status.innerText = currentLang === 'en' ? 'User cancelled transaction' : '用户取消了交易';
+                } else if (error.message.includes('insufficient funds for gas')) {
+                    status.innerText = currentLang === 'en' ? 'Insufficient GT for gas fees' : 'GT 不足以支付 Gas 费用';
+                } else {
+                    status.innerText = currentLang === 'en' ? `Batch redeem failed: ${error.message}` : `批量赎回失败: ${error.message}`;
+                }
+            } finally {
+                batchRedeemButton.disabled = false;
+                batchRedeemButton.innerHTML = currentLang === 'en' ? 'Batch Redeem Selected NFTs' : '一键赎回选中 NFT';
+            }
+        }
+
+        document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
+        document.getElementById('swapButton').addEventListener('click', swapGDOG);
+        document.getElementById('approveButton').addEventListener('click', approveGDOG);
+        document.getElementById('mintButton').addEventListener('click', mintNFT);
+        document.getElementById('redeemButton').addEventListener('click', redeemNFT);
+        document.getElementById('buyButton').addEventListener('click', buyNFT);
+        document.getElementById('batchRedeemButton').addEventListener('click', batchRedeemNFT);
+        document.getElementById('amount').addEventListener('input', checkBalancesAndRatios);
+        document.getElementById('slippage').addEventListener('input', checkBalancesAndRatios);
+        document.getElementById('mintAmount').addEventListener('input', checkMintButtonStatus);
+        document.getElementById('tokenId').addEventListener('input', checkMintButtonStatus);
+
+        document.getElementById('buyModeButton').addEventListener('click', () => {
+            isBuyMode = true;
+            document.getElementById('buyModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('sellModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GT Amount' : '总 GT 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GT amount' : '输入总 GT 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Buy GDOG' : '买入 GDOG';
+            document.getElementById('approveButton').classList.add('hidden');
+            checkBalancesAndRatios();
+        });
+
+        document.getElementById('sellModeButton').addEventListener('click', () => {
+            isBuyMode = false;
+            document.getElementById('sellModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('buyModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GDOG Amount' : '总 GDOG 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GDOG amount' : '输入总 GDOG 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Sell GDOG' : '卖出 GDOG';
+            checkBalancesAndRatios();
+        });
+
+        document.getElementById('langToggle').addEventListener('click', () => {
+            updateLanguage(currentLang === 'en' ? 'zh' : 'en');
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuToggle.innerHTML = mobileMenu.classList.contains('hidden')
+                ? '<i class="fa fa-bars"></i>'
+                : '<i class="fa fa-times"></i>';
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                mobileMenu.classList.add('hidden');
+                menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-dark/95', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-dark/95', 'shadow-lg');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage('en');
+            checkBalancesAndRatios();
+        });
+    </script>
+</body>
+</html>
