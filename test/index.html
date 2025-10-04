@@ -269,9 +269,7 @@
             document.getElementById('langToggle').textContent = lang === 'en' ? '中文' : 'English';
             document.getElementById('mainTitle').textContent = currentMode === 'buy' || currentMode === 'sell' ? (lang === 'en' ? 'Swap GDOG on WoofSwap & GateSwap' : '在 WoofSwap 和 GateSwap 上交换 GDOG') : (lang === 'en' ? 'GdogArmy NFT Operations' : 'GdogArmy NFT 操作');
             document.getElementById('mainDescription').textContent = currentMode === 'buy' || currentMode === 'sell' ? (lang === 'en' ? 'Buy or sell $GDOG with optimized allocation to prevent arbitrage.' : '买入或卖出 $GDOG，优化分配以防止套利。') : (lang === 'en' ? 'Manage your GdogArmy NFTs with ease.' : '轻松管理您的 GdogArmy NFT。');
-            document.getElementById('buyButtonMode').textContent = lang === 'en' ? 'Buy GDOG' : '买入 GDOG';
-            document.getElementById('sellButtonMode').textContent = lang === 'en' ? 'Sell GDOG' : '卖出 GDOG';
-            document.getElementById('gdogArmyButtonMode').textContent = lang === 'en' ? 'GdogArmy' : 'GdogArmy';
+            console.log(`Language switched to: ${lang}`); // Debug log
         }
 
         function switchMode(mode) {
@@ -307,6 +305,7 @@
             }
             updateLanguage(currentLang);
             checkBalancesAndRatios();
+            console.log(`Switched to mode: ${mode}`); // Debug log
         }
 
         async function waitForTransaction(txHash) {
