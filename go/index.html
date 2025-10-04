@@ -123,29 +123,6 @@
         </div>
     </section>
 
-    <div id="walletModal" class="fixed inset-0 bg-dark/80 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-dark p-6 rounded-lg border border-primary/30 max-w-sm w-full max-h-full overflow-y-auto">
-            <h2 class="text-2xl font-display text-primary mb-4">Select Wallet</h2>
-            <div class="flex flex-col space-y-3">
-                <button id="injectedButton" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-all flex items-center">
-                    <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" alt="Injected" class="w-6 h-6 mr-2"> MetaMask / OKX / Gate
-                </button>
-                <button id="walletConnectButton" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-all flex items-center">
-                    <img src="https://raw.githubusercontent.com/WalletConnect/walletconnect-docs/main/docs/assets/walletconnect-logo.png" alt="WalletConnect" class="w-6 h-6 mr-2"> WalletConnect
-                </button>
-            </div>
-            <button id="closeModalButton" class="mt-4 text-light-gray hover:text-secondary">Close</button>
-        </div>
-    </div>
-
-    <div id="qrModal" class="fixed inset-0 bg-dark/80 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-dark p-6 rounded-lg border border-primary/30 max-w-sm w-full text-center max-h-full overflow-y-auto">
-            <h2 class="text-2xl font-display text-primary mb-4">Scan QR Code</h2>
-            <div id="qrCode" class="mx-auto mb-4"></div>
-            <button id="closeQrModalButton" class="px-4 py-2 bg-secondary text-dark rounded-lg hover:bg-secondary/80 transition-all">Close</button>
-        </div>
-    </div>
-
     <footer class="bg-dark/95 py-12 border-t border-primary/20">
         <div class="container mx-auto px-4 text-center">
             <p class="text-light-gray text-sm">© 2025 GDOG. All rights reserved. DYOR and invest responsibly.</p>
@@ -154,7 +131,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://unpkg.com/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/web3modal@1.9.11/dist/index.js"></script>
     <script>
         const WOOF_ROUTER = '0x5c005d074E25b89db97A32087C06D154D8CB2D5b';
         const GATE_ROUTER = '0x12814690F59a9CE8bA87dC8cF0692442bAa9C097';
@@ -194,31 +171,21 @@
             }
         };
 
-        let web3, account, woofPairContract, gatePairContract, dualBuyContract, dualSellContract, gdogContract, walletConnectProvider, connectedWalletName = '';
+        let web3, account, woofPairContract, gatePairContract, dualBuyContract, dualSellContract, gdogContract, walletConnectProvider, web3Modal;
         let isBuyMode = true;
-
-        function detectWalletName(provider) {
-            if (window.okxwallet && provider === window.ethereum) return 'OKX';
-            if (window.gateWallet && provider === window.ethereum) return 'Gate';
-            if (window.ethereum && window.ethereum.isMetaMask) return 'MetaMask';
-            return 'Injected Wallet';
-        }
 
         async function initializeWeb3(provider) {
             web3 = new Web3(provider);
             try {
                 account = (await web3.eth.getAccounts())[0];
-                connectedWalletName = detectWalletName(provider);
                 const shortAddress = `${account.slice(0, 6)}...${account.slice(-4)}`;
-                document.getElementById('connectWalletButton').innerText = `Connected via ${connectedWalletName}: ${shortAddress}`;
+                document.getElementById('connectWalletButton').innerText = `Connected: ${shortAddress}`;
                 document.getElementById('connectWalletButton').classList.add('hidden');
                 document.getElementById('disconnectWalletButton').classList.remove('hidden');
                 await switchNetwork('GateLayer');
                 await initializeContracts();
                 await checkBalancesAndRatios();
-                document.getElementById('networkStatus').innerText = `Connected to Gate Layer (ID: 10088) via ${connectedWalletName}`;
-                document.getElementById('walletModal').classList.add('hidden');
-                document.getElementById('qrModal').classList.add('hidden');
+                document.getElementById('networkStatus').innerText = 'Connected to Gate Layer (ID: 10088)';
             } catch (error) {
                 document.getElementById('networkStatus').innerText = 'Wallet connection failed';
                 document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
@@ -258,36 +225,12 @@
             gdogContract = new web3.eth.Contract(erc20Abi, GDOG);
         }
 
-        async function connectInjected() {
-            let provider = window.ethereum;
-            if (!provider) {
-                if (window.okxwallet) provider = window.okxwallet;
-                else if (window.gateWallet) provider = window.gateWallet;
-                else {
-                    document.getElementById('networkStatus').innerText = 'No compatible wallet found. Please install MetaMask, OKX, or Gate Wallet.';
-                    return;
-                }
-            }
+        async function connectWallet() {
             try {
-                await provider.request({ method: 'eth_requestAccounts' });
+                const provider = await web3Modal.connect();
                 await initializeWeb3(provider);
             } catch (error) {
                 document.getElementById('networkStatus').innerText = 'Connection rejected';
-            }
-        }
-
-        async function connectWalletConnect() {
-            walletConnectProvider = new WalletConnectProvider({
-                rpc: { 10088: 'https://gatelayer-rpc.gatenode.cc' },
-                chainId: 10088
-            });
-            try {
-                await walletConnectProvider.enable();
-                document.getElementById('qrModal').classList.add('hidden');
-                await initializeWeb3(walletConnectProvider);
-            } catch (error) {
-                document.getElementById('networkStatus').innerText = 'WalletConnect failed';
-                document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
             }
         }
 
@@ -296,9 +239,11 @@
                 await walletConnectProvider.disconnect();
                 walletConnectProvider = null;
             }
+            if (web3Modal) {
+                await web3Modal.clearCachedProvider();
+            }
             web3 = null;
             account = null;
-            connectedWalletName = '';
             document.getElementById('connectWalletButton').innerText = 'Connect Wallet';
             document.getElementById('connectWalletButton').classList.remove('hidden');
             document.getElementById('disconnectWalletButton').classList.add('hidden');
@@ -541,44 +486,27 @@
             });
         }
 
-        document.getElementById('connectWalletButton').addEventListener('click', () => {
-            document.getElementById('walletModal').classList.remove('hidden');
-        });
-
-        document.getElementById('injectedButton').addEventListener('click', connectInjected);
-
-        document.getElementById('walletConnectButton').addEventListener('click', () => {
-            document.getElementById('walletModal').classList.add('hidden');
-            document.getElementById('qrModal').classList.remove('hidden');
-            const qrCode = new QRCode(document.getElementById('qrCode'), {
-                text: '',
-                width: 200,
-                height: 200,
-                colorDark: '#ffffff',
-                colorLight: '#070808'
+        document.addEventListener('DOMContentLoaded', async () => {
+            web3Modal = new Web3Modal({
+                network: 'custom',
+                cacheProvider: true,
+                providerOptions: {
+                    walletconnect: {
+                        package: WalletConnectProvider,
+                        options: {
+                            rpc: { 10088: 'https://gatelayer-rpc.gatenode.cc' },
+                            chainId: 10088
+                        }
+                    }
+                }
             });
-            walletConnectProvider = new WalletConnectProvider({
-                rpc: { 10088: 'https://gatelayer-rpc.gatenode.cc' },
-                chainId: 10088
-            });
-            walletConnectProvider.on('display_uri', (uri) => {
-                qrCode.makeCode(uri);
-            });
-            connectWalletConnect();
-        });
-
-        document.getElementById('closeModalButton').addEventListener('click', () => {
-            document.getElementById('walletModal').classList.add('hidden');
-        });
-
-        document.getElementById('closeQrModalButton').addEventListener('click', () => {
-            document.getElementById('qrModal').classList.add('hidden');
-            if (walletConnectProvider) {
-                walletConnectProvider.disconnect();
-                walletConnectProvider = null;
+            checkBalancesAndRatios();
+            if (web3Modal.cachedProvider) {
+                await connectWallet();
             }
         });
 
+        document.getElementById('connectWalletButton').addEventListener('click', connectWallet);
         document.getElementById('disconnectWalletButton').addEventListener('click', disconnectWallet);
         document.getElementById('swapButton').addEventListener('click', swapGDOG);
         document.getElementById('approveButton').addEventListener('click', approveGDOG);
@@ -607,10 +535,6 @@
             document.getElementById('amountLabel').innerText = 'Total GDOG Amount';
             document.getElementById('amount').placeholder = 'Enter total GDOG amount';
             document.getElementById('swapButton').innerText = 'Sell GDOG';
-            checkBalancesAndRatios();
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
             checkBalancesAndRatios();
         });
 
