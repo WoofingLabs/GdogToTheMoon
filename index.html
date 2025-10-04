@@ -249,7 +249,7 @@
                 document.getElementById('woofRatio').innerText = `${(woofRatio * 100).toFixed(2)}%`;
                 document.getElementById('gateRatio').innerText = `${(gateRatio * 100).toFixed(2)}%`;
                 document.getElementById('buyButton').disabled = false;
-                document.getElementById('networkStatus').innerText = `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}% on Gate Layer (10088)`;
+                document.getElementById('networkStatus').innerText = `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}%`;
             } catch (error) {
                 document.getElementById('networkStatus').innerText = 'Failed to calculate ratios - check network/pair addresses';
                 document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
@@ -292,13 +292,17 @@
                 const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
 
+                if (web3.utils.toBN(woofReserveGdog).isZero() || web3.utils.toBN(gateReserveGdog).isZero()) {
+                    throw new Error('Pool not initialized - invalid pair addresses');
+                }
+
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
                 const woofRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
-                const gateRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
+                const gateRatio = 1 - woofRatio; // 确保 woofRatio + gateRatio = 1
 
                 const gtAmountWei = web3.utils.toWei(gtAmount, 'ether');
-                const woofValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000))).div(web3.utils.toBN(1000));
-                const gateValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(gateRatio * 1000))).div(web3.utils.toBN(1000));
+                const woofValue = web3.utils.toBN(gtAmountWei).mul(web3.utils.toBN(Math.floor(woofRatio * 1000000))).div(web3.utils.toBN(1000000));
+                const gateValue = web3.utils.toBN(gtAmountWei).sub(woofValue); // 确保总和精确匹配
 
                 const slippagePercent = parseFloat(slippage) / 100;
                 const woofAmountOutMin = web3.utils.toBN(woofValue).mul(web3.utils.toBN(woofReserveGdog)).div(web3.utils.toBN(woofReserveWgt)).mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000))).div(web3.utils.toBN(1000));
@@ -327,7 +331,7 @@
                     status.innerText = 'Insufficient GT for gas fees';
                     document.getElementById('progressStatus').innerText = 'Error: Insufficient gas';
                 } else if (error.message.includes('execution reverted')) {
-                    status.innerText = 'Transaction reverted - check pair addresses or network (ID: 10088)';
+                    status.innerText = 'Transaction reverted - check pair addresses or GT amount';
                     document.getElementById('progressStatus').innerText = `Error: Reverted - ${error.message}`;
                 } else {
                     status.innerText = 'Buy failed';
@@ -341,8 +345,8 @@
 
         document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
         document.getElementById('buyButton').addEventListener('click', buyGDOG);
-        document.getElementById('gtAmount').addEventListener('input', calculateRatios);
-        document.getElementById('slippage').addEventListener('input', calculateRatios);
+        document.getElementById('gtAmount').addEventListener('input', checkBalancesAndRatios);
+        document.getElementById('slippage').addEventListener('input', checkBalancesAndRatios);
 
         document.addEventListener('DOMContentLoaded', () => {
             checkBalancesAndRatios();
