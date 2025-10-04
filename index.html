@@ -305,16 +305,25 @@
                 const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
 
-                if (web3.utils.toBN(woofReserveGdog).isZero() || web3.utils.toBN(gateReserveGdog).isZero()) {
-                    document.getElementById('networkStatus').innerText = 'Pool not initialized - check pair addresses';
+                const minLiquidity = web3.utils.toWei('1000', 'ether');
+                if (web3.utils.toBN(woofReserveGdog).lt(minLiquidity) || web3.utils.toBN(gateReserveGdog).lt(minLiquidity)) {
+                    document.getElementById('networkStatus').innerText = 'Pool liquidity too low';
                     document.getElementById('swapButton').disabled = true;
-                    console.warn('Reserves zero - invalid pair addresses on Gate Layer (10088)');
+                    return;
+                }
+
+                const woofPrice = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / Number(web3.utils.fromWei(woofReserveWgt, 'ether'));
+                const gatePrice = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / Number(web3.utils.fromWei(gateReserveWgt, 'ether'));
+                const priceDiff = Math.abs(woofPrice - gatePrice) / Math.min(woofPrice, gatePrice);
+                if (priceDiff > 0.05) {
+                    document.getElementById('networkStatus').innerText = 'Price difference too high';
+                    document.getElementById('swapButton').disabled = true;
                     return;
                 }
 
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
-                const woofRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
-                const gateRatio = 1 - woofRatio;
+                const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
+                const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
 
                 document.getElementById('woofRatio').innerText = `${(woofRatio * 100).toFixed(2)}%`;
                 document.getElementById('gateRatio').innerText = `${(gateRatio * 100).toFixed(2)}%`;
@@ -322,7 +331,7 @@
                 document.getElementById('networkStatus').innerText = `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}%`;
                 if (!isBuyMode) await checkAllowance();
             } catch (error) {
-                document.getElementById('networkStatus').innerText = 'Failed to calculate ratios - check network/pair addresses';
+                document.getElementById('networkStatus').innerText = 'Failed to calculate ratios';
                 document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
                 document.getElementById('swapButton').disabled = true;
             }
@@ -363,13 +372,21 @@
                 const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
                 const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
 
-                if (web3.utils.toBN(woofReserveGdog).isZero() || web3.utils.toBN(gateReserveGdog).isZero()) {
-                    throw new Error('Pool not initialized - invalid pair addresses');
+                const minLiquidity = web3.utils.toWei('1000', 'ether');
+                if (web3.utils.toBN(woofReserveGdog).lt(minLiquidity) || web3.utils.toBN(gateReserveGdog).lt(minLiquidity)) {
+                    throw new Error('Pool liquidity too low');
+                }
+
+                const woofPrice = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / Number(web3.utils.fromWei(woofReserveWgt, 'ether'));
+                const gatePrice = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / Number(web3.utils.fromWei(gateReserveWgt, 'ether'));
+                const priceDiff = Math.abs(woofPrice - gatePrice) / Math.min(woofPrice, gatePrice);
+                if (priceDiff > 0.05) {
+                    throw new Error('Price difference too high');
                 }
 
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
-                const woofRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
-                const gateRatio = 1 - woofRatio;
+                const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
+                const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
 
                 if (isBuyMode) {
                     const gtAmountWei = web3.utils.toWei(amount, 'ether');
@@ -427,7 +444,7 @@
                     status.innerText = `Insufficient ${isBuyMode ? 'GT' : 'GDOG'} for ${isBuyMode ? 'buy' : 'sell'}`;
                     document.getElementById('progressStatus').innerText = 'Error: Insufficient funds';
                 } else if (error.message.includes('execution reverted')) {
-                    status.innerText = `Transaction reverted - check pair addresses or ${isBuyMode ? 'GT' : 'GDOG'} amount`;
+                    status.innerText = `Transaction reverted`;
                     document.getElementById('progressStatus').innerText = `Error: Reverted - ${error.message}`;
                 } else {
                     status.innerText = `${isBuyMode ? 'Buy' : 'Sell'} failed`;
