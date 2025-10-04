@@ -16,16 +16,11 @@
                         secondary: '#18E5A0',
                         accent: '#FFD700',
                         dark: '#070808',
-                        'light-gray': '#E5E7EB',
-                        'nft-primary': '#ff9100',
-                        'nft-secondary': '#ff6f61',
-                        'nft-card': '#2c2f48',
-                        'nft-input': '#373b5c'
+                        'light-gray': '#E5E7EB'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
-                        display: ['Changa One', 'system-ui', 'sans-serif'],
-                        poppins: ['Poppins', 'sans-serif']
+                        display: ['Changa One', 'system-ui', 'sans-serif']
                     },
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
@@ -53,114 +48,9 @@
                 background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="1" cy="1" r="1" fill="%230068FF" fill-opacity="0.1"/%3E%3C/svg%3E');
                 background-size: 20px 20px;
             }
-            .nft-container {
-                background: #2c2f48;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-                border-radius: 15px;
-                padding: 20px;
-            }
-            .nft-header {
-                background: linear-gradient(90deg, #ff6f61 0%, #ff9100 100%);
-                padding: 12px;
-                border-radius: 15px;
-                text-align: center;
-                font-size: 1.3em;
-                font-weight: 600;
-                margin-bottom: 20px;
-            }
-            .nft-button {
-                padding: 12px;
-                background: #ff9100;
-                color: #ffffff;
-                border: none;
-                border-radius: 15px;
-                cursor: pointer;
-                font-weight: bold;
-                width: 100%;
-                transition: background 0.2s;
-                margin-bottom: 10px;
-            }
-            .nft-button:hover { background: #e68a00; }
-            .nft-button:disabled {
-                background: #4a4f7a;
-                cursor: not-allowed;
-            }
-            .nft-input-box {
-                background: #373b5c;
-                padding: 15px;
-                border-radius: 15px;
-                margin-bottom: 15px;
-            }
-            .nft-input-box label {
-                display: block;
-                font-size: 0.9em;
-                margin-bottom: 5px;
-            }
-            .nft-input-box input {
-                width: 100%;
-                padding: 10px;
-                background: #373b5c;
-                border: none;
-                border-radius: 10px;
-                color: #ffffff;
-                font-size: 1em;
-            }
-            .nft-balance-row {
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.9em;
-                margin-bottom: 10px;
-                color: #ff9100;
-            }
-            .nft-list {
-                background: #373b5c;
-                padding: 15px;
-                border-radius: 15px;
-                margin-top: 20px;
-            }
-            .nft-list h3 {
-                font-size: 1em;
-                margin-bottom: 10px;
-            }
-            .nft-list ul {
-                list-style: none;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-            .nft-list li {
-                display: flex;
-                align-items: center;
-                padding: 5px 0;
-            }
-            .nft-list input[type="checkbox"] {
-                margin-right: 10px;
-            }
-            .nft-image {
-                width: 40px;
-                height: 40px;
-                margin-right: 10px;
-                cursor: pointer;
-                border-radius: 5px;
-            }
-            .nft-download-button {
-                padding: 5px 10px;
-                background: #ff6f61;
-                color: #ffffff;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 0.8em;
-                margin-left: 10px;
-            }
-            .nft-download-button:hover { background: #e65a50; }
-            @media (max-width: 480px) {
-                .nft-container { padding: 15px; }
-                .nft-header { font-size: 1.1em; }
-                .nft-image { width: 30px; height: 30px; }
-            }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Changa+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Changa+One&display=swap" rel="stylesheet">
 </head>
 <body class="bg-dark text-white font-sans overflow-x-hidden">
     <header class="fixed w-full z-50 bg-dark/90 backdrop-blur-md transition-all duration-300" id="navbar">
@@ -233,28 +123,38 @@
     </section>
 
     <section id="nft" class="min-h-screen py-16 bg-grid relative overflow-hidden flex items-center justify-center">
-        <div class="absolute inset-0 bg-gradient-to-b from-nft-primary/10 to-dark pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-dark pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
-            <div class="nft-container max-w-md mx-auto">
-                <div class="nft-header" data-en="Gdog Army NFT Operations" data-zh="Gdog Army NFT 操作">Gdog Army NFT Operations</div>
-                <div class="nft-input-box">
-                    <label data-en="Mint NFT Amount" data-zh="铸造 NFT 数量">Mint NFT Amount</label>
-                    <input type="text" id="mintAmount" placeholder="Enter mint NFT amount" data-en="Enter mint NFT amount" data-zh="输入铸造 NFT 数量">
-                    <div class="nft-balance-row"><span data-en="GDOG Balance" data-zh="GDOG 余额">GDOG Balance</span><span id="gdogBalance" data-en="Balance: 0" data-zh="余额: 0">Balance: 0</span></div>
-                    <div class="nft-balance-row"><span data-en="NFT Owned" data-zh="持有 NFT">NFT Owned</span><span id="nftBalance" data-en="Balance: 0" data-zh="余额: 0">Balance: 0</span></div>
-                    <label data-en="Redeem/Buy NFT Token ID" data-zh="赎回/购买 NFT 的 Token ID">Redeem/Buy NFT Token ID</label>
-                    <input type="text" id="tokenId" placeholder="Enter Token ID" data-en="Enter Token ID" data-zh="输入 Token ID">
-                    <button class="nft-button" id="mintButton" disabled data-en="Mint NFT" data-zh="铸造 NFT">Mint NFT</button>
-                    <button class="nft-button" id="redeemButton" disabled data-en="Redeem NFT" data-zh="赎回 NFT">Redeem NFT</button>
-                    <button class="nft-button" id="buyButton" disabled data-en="Buy NFT from Contract" data-zh="从合约购买 NFT">Buy NFT from Contract</button>
-                </div>
-                <div class="nft-list">
-                    <h3 data-en="My NFTs" data-zh="我的 NFT">My NFTs</h3>
-                    <ul id="nftList"></ul>
-                    <button class="nft-button" id="batchRedeemButton" disabled data-en="Batch Redeem Selected NFTs" data-zh="一键赎回选中 NFT">Batch Redeem Selected NFTs</button>
-                </div>
-                <div class="mt-4">
-                    <img src="https://www.woofswap.finance/image/tokens/gdog.png" alt="GDOG" class="w-16 h-16 mx-auto">
+            <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-md mx-auto mb-8">
+                <h2 class="font-display text-3xl md:text-4xl mb-6 text-primary text-shadow-glow" data-en="Gdog Army NFT Operations" data-zh="Gdog Army NFT 操作">Gdog Army NFT Operations</h2>
+                <div class="flex flex-col space-y-4">
+                    <div>
+                        <label class="block text-left text-light-gray mb-2" data-en="Mint NFT Amount" data-zh="铸造 NFT 数量">Mint NFT Amount</label>
+                        <input type="text" id="mintAmount" placeholder="Enter mint NFT amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary" data-en="Enter mint NFT amount" data-zh="输入铸造 NFT 数量">
+                    </div>
+                    <div class="flex justify-between text-light-gray text-sm">
+                        <span data-en="GDOG Balance: " data-zh="GDOG 余额: ">GDOG Balance: <span id="gdogBalance">0</span></span>
+                        <span data-en="NFT Owned: " data-zh="持有 NFT: ">NFT Owned: <span id="nftBalance">0</span></span>
+                    </div>
+                    <div>
+                        <label class="block text-left text-light-gray mb-2" data-en="Redeem/Buy NFT Token ID" data-zh="赎回/购买 NFT 的 Token ID">Redeem/Buy NFT Token ID</label>
+                        <input type="text" id="tokenId" placeholder="Enter Token ID" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary" data-en="Enter Token ID" data-zh="输入 Token ID">
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <button class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" id="mintButton" disabled data-en="Mint NFT" data-zh="铸造 NFT">Mint NFT</button>
+                        <button class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" id="redeemButton" disabled data-en="Redeem NFT" data-zh="赎回 NFT">Redeem NFT</button>
+                        <button class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" id="buyButton" disabled data-en="Buy NFT from Contract" data-zh="从合约购买 NFT">Buy NFT from Contract</button>
+                    </div>
+                    <div class="bg-dark/80 p-4 rounded-lg border border-primary/20">
+                        <h3 class="text-lg font-medium mb-2" data-en="My NFTs" data-zh="我的 NFT">My NFTs</h3>
+                        <ul id="nftList" class="max-h-48 overflow-y-auto"></ul>
+                        <button class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed mt-2" id="batchRedeemButton" disabled data-en="Batch Redeem Selected NFTs" data-zh="一键赎回选中 NFT">Batch Redeem Selected NFTs</button>
+                    </div>
+                    <div class="mt-4">
+                        <img src="https://www.woofswap.finance/image/tokens/gdog.png" alt="GDOG" class="w-16 h-16 mx-auto animate-float">
+                    </div>
                 </div>
             </div>
         </div>
@@ -419,8 +319,8 @@
                 document.getElementById('redeemButton').disabled = true;
                 document.getElementById('buyButton').disabled = true;
                 document.getElementById('batchRedeemButton').disabled = true;
-                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? 'Balance: 0' : '余额: 0';
-                document.getElementById('nftBalance').innerText = currentLang === 'en' ? 'Balance: 0' : '余额: 0';
+                document.getElementById('gdogBalance').innerText = '0';
+                document.getElementById('nftBalance').innerText = '0';
                 document.getElementById('nftList').innerHTML = `<li>${currentLang === 'en' ? 'Wallet not connected' : '未连接钱包'}</li>`;
                 return;
             }
@@ -431,8 +331,8 @@
                 const gtBalanceFormatted = Number(web3.utils.fromWei(gtBalance, 'ether')).toFixed(4);
                 const gdogBalanceFormatted = Number(web3.utils.fromWei(gdogBalance, 'ether')).toLocaleString();
                 document.getElementById('balanceStatus').innerText = currentLang === 'en' ? `GT Balance: ${gtBalanceFormatted} | GDOG Balance: ${gdogBalanceFormatted}` : `GT 余额: ${gtBalanceFormatted} | GDOG 余额: ${gdogBalanceFormatted}`;
-                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? `Balance: ${gdogBalanceFormatted}` : `余额: ${gdogBalanceFormatted}`;
-                document.getElementById('nftBalance').innerText = currentLang === 'en' ? `Balance: ${nftBalance}` : `余额: ${nftBalance}`;
+                document.getElementById('gdogBalance').innerText = gdogBalanceFormatted;
+                document.getElementById('nftBalance').innerText = nftBalance;
                 await updateNFTList(nftBalance);
                 await checkMintButtonStatus();
                 await checkAllowance();
@@ -444,8 +344,8 @@
                 document.getElementById('buyButton').disabled = true;
                 document.getElementById('batchRedeemButton').disabled = true;
                 document.getElementById('progressStatus').innerText = currentLang === 'en' ? `Error: Balance check failed - ${error.message}` : `错误：余额检查失败 - ${error.message}`;
-                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? 'Balance: Query failed' : '余额: 查询失败';
-                document.getElementById('nftBalance').innerText = currentLang === 'en' ? 'Balance: Query failed' : '余额: 查询失败';
+                document.getElementById('gdogBalance').innerText = currentLang === 'en' ? 'Query failed' : '查询失败';
+                document.getElementById('nftBalance').innerText = currentLang === 'en' ? 'Query failed' : '查询失败';
                 document.getElementById('nftList').innerHTML = `<li>${currentLang === 'en' ? 'Query failed' : '查询失败'}</li>`;
             }
         }
@@ -689,11 +589,12 @@
                     const tokenId = await nftContract.methods.tokenOfOwnerByIndex(account, i).call();
                     const imageUrl = getNFTImage(tokenId);
                     const li = document.createElement('li');
+                    li.className = 'flex items-center py-2';
                     li.innerHTML = `
-                        <input type="checkbox" class="nft-checkbox" value="${tokenId}">
-                        <img src="${imageUrl}" alt="NFT ${tokenId}" class="nft-image" onerror="this.src='${DEFAULT_IMAGE}'" onclick="window.open('${imageUrl}', '_blank')">
-                        Token ID: ${tokenId}
-                        <button class="nft-download-button" onclick="downloadNFTImage(${tokenId})">${currentLang === 'en' ? 'Download' : '下载'}</button>
+                        <input type="checkbox" class="nft-checkbox mr-2" value="${tokenId}">
+                        <img src="${imageUrl}" alt="NFT ${tokenId}" class="w-10 h-10 rounded mr-2 cursor-pointer" onerror="this.src='${DEFAULT_IMAGE}'" onclick="window.open('${imageUrl}', '_blank')">
+                        <span>Token ID: ${tokenId}</span>
+                        <button class="ml-auto px-2 py-1 bg-secondary text-dark text-sm rounded font-medium hover:bg-secondary/80 transition-all" onclick="downloadNFTImage(${tokenId})">${currentLang === 'en' ? 'Download' : '下载'}</button>
                     `;
                     nftList.appendChild(li);
                 }
@@ -723,7 +624,7 @@
             const status = document.getElementById('networkStatus');
             const mintButton = document.getElementById('mintButton');
             try {
-                mintButton.innerHTML = currentLang === 'en' ? 'Approving... <span class="spinner"></span>' : '授权中... <span class="spinner"></span>';
+                mintButton.innerHTML = currentLang === 'en' ? 'Approving... <i class="fa fa-spinner fa-spin ml-2"></i>' : '授权中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Approving GDOG...' : '正在授权 GDOG...';
                 const amountWei = web3.utils.toBN(mintAmount).mul(web3.utils.toBN(TOKENS_PER_NFT));
                 const gasPrice = await web3.eth.getGasPrice();
@@ -771,7 +672,7 @@
 
             try {
                 mintButton.disabled = true;
-                mintButton.innerHTML = currentLang === 'en' ? 'Checking... <span class="spinner"></span>' : '检查中... <span class="spinner"></span>';
+                mintButton.innerHTML = currentLang === 'en' ? 'Checking... <i class="fa fa-spinner fa-spin ml-2"></i>' : '检查中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Checking balance and gas...' : '检查余额和 Gas...';
 
                 const totalTokens = web3.utils.toBN(mintAmount).mul(web3.utils.toBN(TOKENS_PER_NFT));
@@ -787,7 +688,7 @@
                     if (!approved) return;
                 }
 
-                mintButton.innerHTML = currentLang === 'en' ? 'Minting... <span class="spinner"></span>' : '铸造中... <span class="spinner"></span>';
+                mintButton.innerHTML = currentLang === 'en' ? 'Minting... <i class="fa fa-spinner fa-spin ml-2"></i>' : '铸造中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Minting NFT...' : '正在铸造 NFT...';
 
                 const gasPrice = await web3.eth.getGasPrice();
@@ -837,7 +738,7 @@
 
             try {
                 redeemButton.disabled = true;
-                redeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <span class="spinner"></span>' : '赎回中... <span class="spinner"></span>';
+                redeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <i class="fa fa-spinner fa-spin ml-2"></i>' : '赎回中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Checking Token ID and gas...' : '检查 Token ID 和 Gas...';
 
                 const owner = await nftContract.methods.ownerOf(tokenId).call();
@@ -893,7 +794,7 @@
 
             try {
                 buyButton.disabled = true;
-                buyButton.innerHTML = currentLang === 'en' ? 'Buying... <span class="spinner"></span>' : '购买中... <span class="spinner"></span>';
+                buyButton.innerHTML = currentLang === 'en' ? 'Buying... <i class="fa fa-spinner fa-spin ml-2"></i>' : '购买中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Checking balance and gas...' : '检查余额和 Gas...';
 
                 const owner = await nftContract.methods.ownerOf(tokenId).call();
@@ -961,7 +862,7 @@
 
             try {
                 batchRedeemButton.disabled = true;
-                batchRedeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <span class="spinner"></span>' : '赎回中... <span class="spinner"></span>';
+                batchRedeemButton.innerHTML = currentLang === 'en' ? 'Redeeming... <i class="fa fa-spinner fa-spin ml-2"></i>' : '赎回中... <i class="fa fa-spinner fa-spin ml-2"></i>';
                 status.innerText = currentLang === 'en' ? 'Batch redeeming NFTs...' : '正在批量赎回 NFT...';
 
                 let nativeBalance = await web3.eth.getBalance(account);
