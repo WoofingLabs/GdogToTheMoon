@@ -171,7 +171,7 @@
             }
         };
 
-        let web3, account, woofPairContract, gatePairContract, dualBuyContract, dualSellContract, gdogContract, walletConnectProvider, web3Modal;
+        let web3, account, woofPairContract, gatePairContract, dualBuyContract, dualSellContract, gdogContract, web3Modal;
         let isBuyMode = true;
 
         async function initializeWeb3(provider) {
@@ -235,10 +235,6 @@
         }
 
         async function disconnectWallet() {
-            if (walletConnectProvider) {
-                await walletConnectProvider.disconnect();
-                walletConnectProvider = null;
-            }
             if (web3Modal) {
                 await web3Modal.clearCachedProvider();
             }
@@ -495,7 +491,8 @@
                         package: WalletConnectProvider,
                         options: {
                             rpc: { 10088: 'https://gatelayer-rpc.gatenode.cc' },
-                            chainId: 10088
+                            chainId: 10088,
+                            infuraId: 'YOUR_INFURA_ID' // 可选，若需额外支持
                         }
                     }
                 }
