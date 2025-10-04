@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title data-en="GDOG Dual Swap & NFT" data-zh="GDOG 双重交换与NFT">GDOG Dual Swap & NFT</title>
-    <link rel="icon" type="image/jpeg" href="images/gdog_logo.png">
+    <link rel="icon" type="image/png" href="https://www.woofswap.finance/image/tokens/gdog.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -57,11 +57,16 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer hover:text-primary transition-colors">
                 <div class="w-10 h-10 rounded-full overflow-hidden">
-                    <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover">
+                    <img src="https://www.woofswap.finance/image/tokens/gdog.png" alt="GDOG Logo" class="w-full h-full object-cover">
                 </div>
                 <span class="font-display text-3xl text-primary text-shadow-glow" data-en="GDOG Dual Swap & NFT" data-zh="GDOG 双重交换与NFT">GDOG Dual Swap & NFT</span>
             </div>
             <div class="flex items-center space-x-4">
+                <div class="hidden md:flex space-x-4">
+                    <a href="#swap" id="buyNav" class="hover:text-primary transition-colors" data-en="Buy GDOG" data-zh="买入 GDOG">Buy GDOG</a>
+                    <a href="#swap" id="sellNav" class="hover:text-primary transition-colors" data-en="Sell GDOG" data-zh="卖出 GDOG">Sell GDOG</a>
+                    <a href="#nft" class="hover:text-primary transition-colors" data-en="GdogArmy" data-zh="GdogArmy">GdogArmy</a>
+                </div>
                 <button id="langToggle" class="text-primary hover:text-secondary transition-colors">中文</button>
                 <button id="menuToggle" class="md:hidden text-2xl text-primary">
                     <i class="fa fa-bars"></i>
@@ -70,8 +75,9 @@
         </div>
         <div id="mobileMenu" class="md:hidden bg-dark/95 absolute w-full top-full py-4 px-4 hidden">
             <div class="flex flex-col space-y-4">
-                <a href="#swap" class="hover:text-primary transition-colors py-2 text-white" data-en="Swap GDOG" data-zh="交换 GDOG">Swap GDOG</a>
-                <a href="#nft" class="hover:text-primary transition-colors py-2 text-white" data-en="NFT Operations" data-zh="NFT 操作">NFT Operations</a>
+                <a href="#swap" id="buyNavMobile" class="hover:text-primary transition-colors py-2 text-white" data-en="Buy GDOG" data-zh="买入 GDOG">Buy GDOG</a>
+                <a href="#swap" id="sellNavMobile" class="hover:text-primary transition-colors py-2 text-white" data-en="Sell GDOG" data-zh="卖出 GDOG">Sell GDOG</a>
+                <a href="#nft" class="hover:text-primary transition-colors py-2 text-white" data-en="GdogArmy" data-zh="GdogArmy">GdogArmy</a>
             </div>
         </div>
     </header>
@@ -82,7 +88,7 @@
         <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
             <div class="w-48 h-48 mx-auto mb-8 animate-float">
-                <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
+                <img src="https://www.woofswap.finance/image/tokens/gdog.png" alt="GDOG Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
             </div>
             <h1 class="font-display text-5xl md:text-7xl mb-6 text-primary text-shadow-glow" data-en="Swap GDOG on WoofSwap & GateSwap" data-zh="在 WoofSwap 和 GateSwap 上交换 GDOG">Swap GDOG on WoofSwap & GateSwap</h1>
             <p class="text-xl md:text-2xl text-light-gray max-w-3xl mx-auto mb-10" data-en="Buy or sell $GDOG with optimized allocation to prevent arbitrage." data-zh="买入或卖出 $GDOG，优化分配以防止套利。">Buy or sell $GDOG with optimized allocation to prevent arbitrage.</p>
@@ -128,7 +134,7 @@
         <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
             <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-md mx-auto mb-8">
-                <h2 class="font-display text-3xl md:text-4xl mb-6 text-primary text-shadow-glow" data-en="Gdog Army NFT Operations" data-zh="Gdog Army NFT 操作">Gdog Army NFT Operations</h2>
+                <h2 class="font-display text-3xl md:text-4xl mb-6 text-primary text-shadow-glow" data-en="GdogArmy NFT Operations" data-zh="GdogArmy NFT 操作">GdogArmy NFT Operations</h2>
                 <div class="flex flex-col space-y-4">
                     <div>
                         <label class="block text-left text-light-gray mb-2" data-en="Mint NFT Amount" data-zh="铸造 NFT 数量">Mint NFT Amount</label>
@@ -944,6 +950,68 @@
             checkBalancesAndRatios();
         });
 
+        document.getElementById('buyNav').addEventListener('click', (e) => {
+            e.preventDefault();
+            isBuyMode = true;
+            document.getElementById('buyModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('sellModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GT Amount' : '总 GT 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GT amount' : '输入总 GT 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Buy GDOG' : '买入 GDOG';
+            document.getElementById('approveButton').classList.add('hidden');
+            document.querySelector('#swap').scrollIntoView({ behavior: 'smooth' });
+            checkBalancesAndRatios();
+        });
+
+        document.getElementById('sellNav').addEventListener('click', (e) => {
+            e.preventDefault();
+            isBuyMode = false;
+            document.getElementById('sellModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('buyModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GDOG Amount' : '总 GDOG 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GDOG amount' : '输入总 GDOG 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Sell GDOG' : '卖出 GDOG';
+            document.querySelector('#swap').scrollIntoView({ behavior: 'smooth' });
+            checkBalancesAndRatios();
+        });
+
+                document.getElementById('buyNavMobile').addEventListener('click', (e) => {
+            e.preventDefault();
+            isBuyMode = true;
+            document.getElementById('buyModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('sellModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GT Amount' : '总 GT 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GT amount' : '输入总 GT 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Buy GDOG' : '买入 GDOG';
+            document.getElementById('approveButton').classList.add('hidden');
+            document.getElementById('mobileMenu').classList.add('hidden');
+            document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
+            document.querySelector('#swap').scrollIntoView({ behavior: 'smooth' });
+            checkBalancesAndRatios();
+        });
+
+        document.getElementById('sellNavMobile').addEventListener('click', (e) => {
+            e.preventDefault();
+            isBuyMode = false;
+            document.getElementById('sellModeButton').classList.add('bg-primary', 'text-white');
+            document.getElementById('sellModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('buyModeButton').classList.remove('bg-primary', 'text-white');
+            document.getElementById('buyModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
+            document.getElementById('amountLabel').innerText = currentLang === 'en' ? 'Total GDOG Amount' : '总 GDOG 数量';
+            document.getElementById('amount').placeholder = currentLang === 'en' ? 'Enter total GDOG amount' : '输入总 GDOG 数量';
+            document.getElementById('swapButton').innerText = currentLang === 'en' ? 'Sell GDOG' : '卖出 GDOG';
+            document.getElementById('mobileMenu').classList.add('hidden');
+            document.getElementById('menuToggle').innerHTML = '<i class="fa fa-bars"></i>';
+            document.querySelector('#swap').scrollIntoView({ behavior: 'smooth' });
+            checkBalancesAndRatios();
+        });
+
         document.getElementById('langToggle').addEventListener('click', () => {
             updateLanguage(currentLang === 'en' ? 'zh' : 'en');
         });
@@ -958,14 +1026,16 @@
         });
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                mobileMenu.classList.add('hidden');
-                menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+            if (!anchor.id.includes('Nav')) {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileMenu.classList.add('hidden');
+                    menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 });
-            });
+            }
         });
 
         const navbar = document.getElementById('navbar');
