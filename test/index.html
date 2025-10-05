@@ -92,7 +92,6 @@
                         <button id="sellModeButton" class="px-6 py-2 bg-dark/80 border border-secondary text-secondary rounded-full font-medium hover:bg-secondary/10 transition-all">Sell GDOG</button>
                         <button id="gdogArmyModeButton" class="px-6 py-2 bg-dark/80 border border-secondary text-secondary rounded-full font-medium hover:bg-secondary/10 transition-all">GdogArmy</button>
                     </div>
-                    <!-- Swap Content (Buy/Sell) -->
                     <div id="swapContent">
                         <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">Connect Wallet</button>
                         <p id="networkStatus" class="text-light-gray text-sm">Click to connect wallet...</p>
@@ -104,7 +103,6 @@
                             </button>
                         </div>
                         <p id="balanceStatus" class="text-light-gray text-sm">GT Balance: 0 | GDOG Balance: 0</p>
-                        <button id="approveButton" class="px-6 py-3 bg-secondary text-dark rounded-full font-medium hover:bg-secondary/80 transition-all hidden">Approve GDOG</button>
                         <div id="amountInput">
                             <label id="amountLabel" class="block text-left text-light-gray mb-2">Total GT Amount</label>
                             <input id="amount" type="text" placeholder="Enter total GT amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
@@ -120,7 +118,6 @@
                         <button id="swapButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled>Buy GDOG</button>
                         <p id="progressStatus" class="text-light-gray text-sm">Waiting for action...</p>
                     </div>
-                    <!-- GdogArmy Content -->
                     <div id="gdogArmyContent" class="hidden">
                         <div class="flex flex-col space-y-4">
                             <div>
@@ -175,6 +172,7 @@
         const TOKENS_PER_NFT = '100000000000000000000000';
         const IMAGE_BASE_URL = 'https://www.gdoggate.com/nft/';
         const DEFAULT_IMAGE = 'https://woofinglabs.github.io/GdogToTheMoon/images/gdog_logo.png';
+        const MAX_APPROVAL = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
         const pairAbi = [
             {"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint112","name":"_reserve0","type":"uint112"},{"internalType":"uint112","name":"_reserve1","type":"uint112"},{"internalType":"uint32","name":"_blockTimestampLast","type":"uint32"}],"stateMutability":"view","type":"function"},
@@ -290,7 +288,6 @@
         async function checkBalancesAndRatios() {
             if (!web3 || !account) {
                 document.getElementById('swapButton').disabled = true;
-                document.getElementById('approveButton').classList.add('hidden');
                 document.getElementById('woofRatio').innerText = '0%';
                 document.getElementById('gateRatio').innerText = '0%';
                 document.getElementById('progressStatus').innerText = 'Error: Wallet not connected';
@@ -313,7 +310,6 @@
                 document.getElementById('gdogBalance').innerText = gdogBalanceFormatted;
                 document.getElementById('nftBalance').innerText = nftBalance;
                 if (currentMode === 'buy' || currentMode === 'sell') {
-                    await checkAllowance();
                     await calculateRatios();
                 } else if (currentMode === 'gdogArmy') {
                     await updateNFTList(nftBalance);
@@ -332,41 +328,18 @@
             }
         }
 
-        async function checkAllowance() {
-            if (currentMode !== 'sell') return;
+        async function approveGDOGForSell() {
+            if (currentMode !== 'sell') return false;
             try {
-                const allowance = await gdogContract.methods.allowance(account, DUAL_SELL_CONTRACT).call();
-                const amount = document.getElementById('amount').value.trim();
-                const amountWei = amount ? web3.utils.toWei(amount, 'ether') : '0';
-                if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
-                    document.getElementById('approveButton').classList.remove('hidden');
-                    document.getElementById('swapButton').disabled = true;
-                } else {
-                    document.getElementById('approveButton').classList.add('hidden');
-                    document.getElementById('swapButton').disabled = false;
-                }
-            } catch (error) {
-                document.getElementById('progressStatus').innerText = `Error: Allowance check failed - ${error.message}`;
-            }
-        }
-
-        async function approveGDOG() {
-            if (currentMode !== 'sell') return;
-            const amount = document.getElementById('amount').value.trim();
-            if (!amount || isNaN(amount) || amount <= 0) {
-                document.getElementById('progressStatus').innerText = 'Error: Invalid GDOG amount';
-                return;
-            }
-            try {
-                document.getElementById('approveButton').innerHTML = 'Approving... <i class="fa fa-spinner fa-spin ml-2"></i>';
-                const amountWei = web3.utils.toWei(amount, 'ether');
-                const tx = await gdogContract.methods.approve(DUAL_SELL_CONTRACT, amountWei).send({ from: account, gas: 100000 });
+                document.getElementById('swapButton').innerHTML = 'Approving... <i class="fa fa-spinner fa-spin ml-2"></i>';
+                const tx = await gdogContract.methods.approve(DUAL_SELL_CONTRACT, MAX_APPROVAL).send({ from: account, gas: 100000 });
                 document.getElementById('progressStatus').innerText = `Approval successful: ${tx.transactionHash}`;
-                await checkAllowance();
+                return true;
             } catch (error) {
                 document.getElementById('progressStatus').innerText = `Error: Approval failed - ${error.message}`;
+                return false;
             } finally {
-                document.getElementById('approveButton').innerHTML = 'Approve GDOG';
+                document.getElementById('swapButton').innerHTML = 'Sell GDOG';
             }
         }
 
@@ -400,7 +373,6 @@
                 document.getElementById('gateRatio').innerText = `${(gateRatio * 100).toFixed(2)}%`;
                 document.getElementById('swapButton').disabled = false;
                 document.getElementById('networkStatus').innerText = `Ratios: WoofSwap ${(woofRatio * 100).toFixed(2)}%, GateSwap ${(gateRatio * 100).toFixed(2)}%`;
-                if (currentMode === 'sell') await checkAllowance();
             } catch (error) {
                 document.getElementById('networkStatus').innerText = 'Failed to calculate ratios';
                 document.getElementById('progressStatus').innerText = `Error: ${error.message}`;
@@ -447,6 +419,15 @@
                 const totalLiquidity = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) + Number(web3.utils.fromWei(gateReserveGdog, 'ether'));
                 const woofRatio = Number(web3.utils.fromWei(woofReserveGdog, 'ether')) / totalLiquidity;
                 const gateRatio = Number(web3.utils.fromWei(gateReserveGdog, 'ether')) / totalLiquidity;
+
+                if (currentMode === 'sell') {
+                    const allowance = await gdogContract.methods.allowance(account, DUAL_SELL_CONTRACT).call();
+                    const amountWei = web3.utils.toWei(amount, 'ether');
+                    if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                        const approved = await approveGDOGForSell();
+                        if (!approved) return;
+                    }
+                }
 
                 if (currentMode === 'buy') {
                     const gtAmountWei = web3.utils.toWei(amount, 'ether');
@@ -898,7 +879,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
             document.getElementById('swapButton').addEventListener('click', swapGDOG);
-            document.getElementById('approveButton').addEventListener('click', approveGDOG);
             document.getElementById('amount').addEventListener('input', checkBalancesAndRatios);
             document.getElementById('slippage').addEventListener('input', checkBalancesAndRatios);
             document.getElementById('mintAmount').addEventListener('input', checkMintButtonStatus);
@@ -936,7 +916,6 @@
                     document.getElementById('amountLabel').innerText = 'Total GT Amount';
                     document.getElementById('amount').placeholder = 'Enter total GT amount';
                     document.getElementById('swapButton').innerText = 'Buy GDOG';
-                    document.getElementById('approveButton').classList.add('hidden');
                 } else if (mode === 'sell') {
                     document.getElementById('mainTitle').textContent = 'Swap GDOG on WoofSwap & GateSwap';
                     document.getElementById('mainDescription').textContent = 'Buy or sell $GDOG with optimized allocation to prevent arbitrage.';
@@ -948,7 +927,6 @@
                     document.getElementById('mainDescription').textContent = 'Manage your GdogArmy NFTs with ease.';
                     document.getElementById('amountInput').classList.add('hidden');
                     document.getElementById('swapButton').classList.add('hidden');
-                    document.getElementById('approveButton').classList.add('hidden');
                 }
                 checkBalancesAndRatios();
             }
