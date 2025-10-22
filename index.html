@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GDOG Swap</title>
-    <link rel="icon" type="image/jpeg" href="images/gdog_logo.png">
+    <link rel="icon" type="image/png" href="images/gdog_logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -75,86 +76,155 @@
         <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-dark pointer-events-none"></div>
         <div class="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
-    <div class="container mx-auto px-4 text-center relative z-10">
-        <div class="w-48 h-48 mx-auto mb-8 animate-float">
-            <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
-        </div>
-        <h1 class="font-display text-5xl md:text-7xl mb-6 text-primary text-shadow-glow">在GateSwap上交易GDOG</h1>
-        <p class="text-xl md:text-2xl text-light-gray max-w-3xl mx-auto mb-10">
-            使用GT购买或出售$GDOG。
-        </p>
-        <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-md mx-auto mb-8">
-            <div class="flex flex-col space-y-4">
-                <div class="flex justify-center gap-4">
-                    <button id="buyModeButton" class="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">购买GDOG</button>
-                    <button id="sellModeButton" class="px-6 py-2 bg-dark/80 border border-secondary text-secondary rounded-full font-medium hover:bg-secondary/10 transition-all">出售GDOG</button>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="w-48 h-48 mx-auto mb-8 animate-float">
+                <img src="images/gdog_logo.png" alt="GDOG Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl mb-6 text-primary text-shadow-glow">Swap GDOG on GateSwap</h1>
+            <p class="text-xl md:text-2xl text-light-gray max-w-3xl mx-auto mb-10">
+                Buy or sell $GDOG with GateSwap.
+            </p>
+            <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-md mx-auto mb-8">
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-center gap-4">
+                        <button id="buyModeButton" class="px-6 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">Buy GDOG</button>
+                        <button id="sellModeButton" class="px-6 py-2 bg-dark/80 border border-secondary text-secondary rounded-full font-medium hover:bg-secondary/10 transition-all">Sell GDOG</button>
+                    </div>
+                    <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">Connect Wallet</button>
+                    <p id="networkStatus" class="text-light-gray text-sm">Click to connect wallet...</p>
+                    <div class="flex items-center bg-dark/80 p-3 rounded-lg border border-primary/20">
+                        <i class="fa fa-link text-accent mr-3"></i>
+                        <span class="font-mono text-sm text-white truncate">0xf6D9Cf57e20bA0d33372E8998A9424aa53411E04</span>
+                        <button class="ml-3 text-light-gray hover:text-secondary transition-colors" onclick="copyContract()">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                    <p id="balanceStatus" class="text-light-gray text-sm">GT Balance: 0 | GDOG Balance: 0</p>
+                    <button id="approveButton" class="px-6 py-3 bg-secondary text-dark rounded-full font-medium hover:bg-secondary/80 transition-all hidden">Approve GDOG</button>
+                    <div id="amountInput">
+                        <label id="amountLabel" class="block text-left text-light-gray mb-2">Total GT Amount</label>
+                        <input id="amount" type="text" placeholder="Enter total GT amount" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
+                    </div>
+                    <div>
+                        <label class="block text-left text-light-gray mb-2">Slippage Tolerance (%)</label>
+                        <input id="slippage" type="text" placeholder="Enter slippage (e.g., 5)" value="5" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
+                    </div>
+                    <button id="swapButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled>Buy GDOG</button>
+                    <p id="progressStatus" class="text-light-gray text-sm">Waiting for action...</p>
                 </div>
-                <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">连接钱包</button>
-                <p id="networkStatus" class="text-light-gray text-sm">点击连接钱包...</p>
-                <div class="flex items-center bg-dark/80 p-3 rounded-lg border border-primary/20">
-                    <i class="fa fa-link text-accent mr-3"></i>
-                    <span class="font-mono text-sm text-white truncate">0xf6d9cf57e20ba0d33372e8998a9424aa53411e04</span>
-                    <button class="ml-3 text-light-gray hover:text-secondary transition-colors" onclick="copyContract()">
-                        <i class="fa fa-copy"></i>
-                    </button>
-                </div>
-                <p id="balanceStatus" class="text-light-gray text-sm">GT余额: 0 | GDOG余额: 0</p>
-                <button id="approveButton" class="px-6 py-3 bg-secondary text-dark rounded-full font-medium hover:bg-secondary/80 transition-all hidden">授权GDOG</button>
-                <div id="amountInput">
-                    <label id="amountLabel" class="block text-left text-light-gray mb-2">GT总量</label>
-                    <input id="amount" type="text" placeholder="输入GT总量" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
-                </div>
-                <div>
-                    <label class="block text-left text-light-gray mb-2">滑点容忍度 (%)</label>
-                    <input id="slippage" type="text" placeholder="输入滑点 (如 1)" value="1" class="w-full px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
-                </div>
-                <button id="swapButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled>购买GDOG</button>
-                <p id="progressStatus" class="text-light-gray text-sm">等待操作...</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <footer class="bg-dark/95 py-12 border-t border-primary/20">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-light-gray text-sm">© 2025 GDOG。保留所有权利。请自行研究并谨慎投资。</p>
+            <p class="text-light-gray text-sm">© 2025 GDOG. All rights reserved. DYOR and invest responsibly.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         const GATE_ROUTER = '0x12814690F59a9CE8bA87dC8cF0692442bAa9C097';
+        const GDOG = '0xf6D9Cf57e20bA0d33372E8998A9424aa53411E04';
         const WGT = '0x6803b8E93b13941F6B73b82E324B80251B3dE338';
-        const GDOG = '0xf6d9cf57e20ba0d33372e8998a9424aa53411e04';
         const GATE_PAIR = '0xd5DBe6cf9Fec4e705bB4f219bf5b5185129c12b9';
 
-        const pairAbi = [
-            {"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint112","name":"_reserve0","type":"uint112"},{"internalType":"uint112","name":"_reserve1","type":"uint112"},{"internalType":"uint32","name":"_blockTimestampLast","type":"uint32"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"token0","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+        const routerAbi = [
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
+                    { "internalType": "address[]", "name": "path", "type": "address[]" },
+                    { "internalType": "address", "name": "to", "type": "address" },
+                    { "internalType": "uint256", "name": "deadline", "type": "uint256" }
+                ],
+                "name": "swapExactETHForTokensSupportingFeeOnTransferTokens",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+                    { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
+                    { "internalType": "address[]", "name": "path", "type": "address[]" },
+                    { "internalType": "address", "name": "to", "type": "address" },
+                    { "internalType": "uint256", "name": "deadline", "type": "uint256" }
+                ],
+                "name": "swapExactTokensForETHSupportingFeeOnTransferTokens",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
         ];
 
         const erc20Abi = [
-            {"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"stateMutability":"view","type":"function"}
-        ];
-
-        const routerAbi = [
-            {"inputs":[{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"internalType":"address[]","name":"path","type":"address[]"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactTokensForTokens","outputs":[{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"internalType":"address[]","name":"path","type":"address[]"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactETHForTokens","outputs":[{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"payable","type":"function"}
+            {
+                "constant": true,
+                "inputs": [{ "name": "_owner", "type": "address" }],
+                "name": "balanceOf",
+                "outputs": [{ "name": "balance", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    { "name": "_spender", "type": "address" },
+                    { "name": "_value", "type": "uint256" }
+                ],
+                "name": "approve",
+                "outputs": [{ "name": "success", "type": "bool" }],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    { "name": "_owner", "type": "address" },
+                    { "name": "_spender", "type": "address" }
+                ],
+                "name": "allowance",
+                "outputs": [{ "name": "remaining", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            }
         ];
 
         const chains = {
             GateLayer: {
                 chainId: 10088,
                 chainName: 'Gate Layer',
-                rpcUrl: 'https://gatelayer-mainnet.gatenode.cc/',
+                rpcUrl: 'https://gatelayer-rpc.gatenode.cc',
                 blockExplorer: 'https://www.gatescan.org/gatelayer/',
                 nativeCurrency: { name: 'GT', symbol: 'GT', decimals: 18 }
             }
         };
 
-        let web3, account, gatePairContract, gateRouterContract, gdogContract;
+        const dogMessages = {
+            connectSuccess: ["Woof! Wallet connected, ready to swap GDOG!", "Arf! Connected, let's go!"],
+            connectFail: ["Woof! Wallet connection failed, try again!", "Arf! Can't connect wallet!"],
+            approveStart: ["Woof! Approving GDOG, hold on!", "Arf! Authorizing GDOG!"],
+            approveSuccess: ["Woof! GDOG approved, ready to sell!", "Arf! Approval done!"],
+            approveFail: ["Woof! Approval failed, try again!", "Arf! Approval error!"],
+            buyStart: ["Woof! Buying GDOG, wait a sec!", "Arf! Getting GDOG!"],
+            buySuccess: ["Woof! Successfully bought GDOG!", "Arf! GDOG acquired!"],
+            buyFail: ["Woof! Buy failed, check inputs!", "Arf! Something went wrong!"],
+            sellStart: ["Woof! Selling GDOG, hold on!", "Arf! Selling GDOG now!"],
+            sellSuccess: ["Woof! Successfully sold GDOG!", "Arf! Sale complete!"],
+            sellFail: ["Woof! Sell failed, check inputs!", "Arf! Sale error!"],
+            invalidInput: ["Woof! Invalid amount or slippage!", "Arf! Check your inputs!"],
+            userDenied: ["Woof! Transaction cancelled!", "Arf! You rejected the transaction!"],
+            insufficientBalance: ["Woof! Not enough GT or GDOG!", "Arf! Need more funds!"],
+            insufficientGas: ["Woof! Not enough GT for gas!", "Arf! Gas funds low!"],
+            insufficientAllowance: ["Woof! GDOG not approved, approve first!", "Arf! Need GDOG approval!"]
+        };
+
+        function getRandomMessage(type) {
+            const messages = dogMessages[type];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        let web3, account, routerContract, GDOGContract;
         let isBuyMode = true;
 
         async function initializeWeb3() {
@@ -163,17 +233,19 @@
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                     account = (await web3.eth.getAccounts())[0];
-                    document.getElementById('connectWalletButton').innerText = `已连接: ${account.slice(0, 6)}...${account.slice(-4)}`;
+                    document.getElementById('connectWalletButton').innerText = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
                     await switchNetwork('GateLayer');
                     await initializeContracts();
                     await checkBalances();
-                    document.getElementById('networkStatus').innerText = '已连接到Gate Layer (ID: 10088)';
+                    document.getElementById('networkStatus').innerText = 'Connected to Gate Layer';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('connectSuccess');
                 } catch (error) {
-                    document.getElementById('networkStatus').innerText = '钱包连接失败';
-                    document.getElementById('progressStatus').innerText = `错误: 连接失败 - ${error.message}`;
+                    document.getElementById('networkStatus').innerText = 'Wallet connection failed';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('connectFail');
                 }
             } else {
-                document.getElementById('networkStatus').innerText = '请安装MetaMask';
+                document.getElementById('networkStatus').innerText = 'Please install MetaMask';
+                document.getElementById('progressStatus').innerText = 'Error: MetaMask not detected';
             }
         }
 
@@ -203,37 +275,43 @@
         }
 
         async function initializeContracts() {
-            gatePairContract = new web3.eth.Contract(pairAbi, GATE_PAIR);
-            gateRouterContract = new web3.eth.Contract(routerAbi, GATE_ROUTER);
-            gdogContract = new web3.eth.Contract(erc20Abi, GDOG);
+            routerContract = new web3.eth.Contract(routerAbi, GATE_ROUTER);
+            GDOGContract = new web3.eth.Contract(erc20Abi, GDOG);
         }
 
         async function checkBalances() {
             if (!web3 || !account) {
                 document.getElementById('swapButton').disabled = true;
-                document.getElementById('progressStatus').innerText = '错误: 钱包未连接';
+                document.getElementById('approveButton').classList.add('hidden');
+                document.getElementById('balanceStatus').innerText = 'GT Balance: 0 | GDOG Balance: 0';
                 return;
             }
             try {
                 const gtBalance = await web3.eth.getBalance(account);
-                const gdogBalance = await gdogContract.methods.balanceOf(account).call();
+                const GDOGBalance = await GDOGContract.methods.balanceOf(account).call();
                 const gtBalanceFormatted = Number(web3.utils.fromWei(gtBalance, 'ether')).toFixed(4);
-                const gdogBalanceFormatted = Number(web3.utils.fromWei(gdogBalance, 'ether')).toFixed(4);
-                document.getElementById('balanceStatus').innerText = `GT余额: ${gtBalanceFormatted} | GDOG余额: ${gdogBalanceFormatted}`;
+                const GDOGBalanceFormatted = Number(GDOGBalance / 10).toFixed(1); // GDOG: 1 decimal
+                document.getElementById('balanceStatus').innerText = `GT Balance: ${gtBalanceFormatted} | GDOG Balance: ${GDOGBalanceFormatted}`;
                 await checkAllowance();
             } catch (error) {
+                document.getElementById('balanceStatus').innerText = 'Balance check failed';
+                document.getElementById('progressStatus').innerText = `Error: Balance check failed - ${error.message}`;
                 document.getElementById('swapButton').disabled = true;
-                document.getElementById('progressStatus').innerText = `错误: 余额检查失败 - ${error.message}`;
             }
         }
 
         async function checkAllowance() {
             if (!isBuyMode) {
                 try {
-                    const allowance = await gdogContract.methods.allowance(account, GATE_ROUTER).call();
                     const amount = document.getElementById('amount').value.trim();
-                    const amountWei = amount ? web3.utils.toWei(amount, 'ether') : '0';
-                    if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                    if (!amount || isNaN(amount) || amount <= 0) {
+                        document.getElementById('approveButton').classList.add('hidden');
+                        document.getElementById('swapButton').disabled = true;
+                        return;
+                    }
+                    const amountWei = web3.utils.toBN(amount * 10); // GDOG: 1 decimal
+                    const allowance = await GDOGContract.methods.allowance(account, GATE_ROUTER).call();
+                    if (web3.utils.toBN(allowance).lt(amountWei)) {
                         document.getElementById('approveButton').classList.remove('hidden');
                         document.getElementById('swapButton').disabled = true;
                     } else {
@@ -241,30 +319,47 @@
                         document.getElementById('swapButton').disabled = false;
                     }
                 } catch (error) {
-                    document.getElementById('progressStatus').innerText = `错误: 授权检查失败 - ${error.message}`;
+                    document.getElementById('progressStatus').innerText = getRandomMessage('approveFail');
+                    document.getElementById('swapButton').disabled = true;
                 }
             } else {
                 document.getElementById('approveButton').classList.add('hidden');
-                document.getElementById('swapButton').disabled = false;
+                document.getElementById('swapButton').disabled = document.getElementById('amount').value.trim() === '' || isNaN(document.getElementById('amount').value) || document.getElementById('amount').value <= 0;
             }
         }
 
         async function approveGDOG() {
             const amount = document.getElementById('amount').value.trim();
             if (!amount || isNaN(amount) || amount <= 0) {
-                document.getElementById('progressStatus').innerText = '错误: 无效的GDOG数量';
+                document.getElementById('progressStatus').innerText = getRandomMessage('invalidInput');
                 return;
             }
             try {
-                document.getElementById('approveButton').innerHTML = '授权中... <i class="fa fa-spinner fa-spin ml-2"></i>';
-                const amountWei = web3.utils.toWei(amount, 'ether');
-                const tx = await gdogContract.methods.approve(GATE_ROUTER, amountWei).send({ from: account, gas: 100000 });
-                document.getElementById('progressStatus').innerText = `授权成功: ${tx.transactionHash}`;
+                document.getElementById('approveButton').innerHTML = 'Approving... <i class="fa fa-spinner fa-spin ml-2"></i>';
+                document.getElementById('progressStatus').innerText = getRandomMessage('approveStart');
+                const amountWei = web3.utils.toBN(amount * 10); // GDOG: 1 decimal
+                const gasPrice = await web3.eth.getGasPrice();
+                const estimatedGas = await GDOGContract.methods.approve(GATE_ROUTER, amountWei).estimateGas({ from: account });
+                const tx = await GDOGContract.methods.approve(GATE_ROUTER, amountWei).send({
+                    from: account,
+                    gas: Math.min(estimatedGas * 2, 1000000),
+                    gasPrice
+                });
+                document.getElementById('progressStatus').innerText = `Approval successful: ${tx.transactionHash}`;
+                document.getElementById('networkStatus').innerText = 'GDOG approved';
                 await checkAllowance();
             } catch (error) {
-                document.getElementById('progressStatus').innerText = `错误: 授权失败 - ${error.message}`;
+                document.getElementById('progressStatus').innerText = getRandomMessage('approveFail');
+                if (error.code === 4001) {
+                    document.getElementById('networkStatus').innerText = 'Transaction cancelled';
+                } else if (error.message.includes('insufficient funds')) {
+                    document.getElementById('networkStatus').innerText = 'Not enough GT for gas';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('insufficientGas');
+                } else {
+                    document.getElementById('networkStatus').innerText = 'Approval failed';
+                }
             } finally {
-                document.getElementById('approveButton').innerHTML = '授权GDOG';
+                document.getElementById('approveButton').innerHTML = 'Approve GDOG';
             }
         }
 
@@ -275,103 +370,131 @@
             const swapButton = document.getElementById('swapButton');
 
             if (!web3 || !account) {
-                status.innerText = '请连接钱包';
-                document.getElementById('progressStatus').innerText = '错误: 钱包未连接';
+                status.innerText = 'Please connect wallet';
+                document.getElementById('progressStatus').innerText = getRandomMessage('connectFail');
                 return;
             }
             if (!amount || isNaN(amount) || amount <= 0 || !slippage || isNaN(slippage) || slippage < 0) {
-                status.innerText = `无效的${isBuyMode ? 'GT' : 'GDOG'}数量或滑点`;
-                document.getElementById('progressStatus').innerText = '错误: 无效输入';
+                status.innerText = `Invalid ${isBuyMode ? 'GT' : 'GDOG'} amount or slippage`;
+                document.getElementById('progressStatus').innerText = getRandomMessage('invalidInput');
                 return;
             }
 
             swapButton.disabled = true;
-            swapButton.innerHTML = `${isBuyMode ? '购买' : '出售'}中... <i class="fa fa-spinner fa-spin ml-2"></i>`;
-            status.innerText = `正在执行${isBuyMode ? '购买' : '出售'}...`;
-            document.getElementById('progressStatus').innerText = `${isBuyMode ? '购买' : '出售'}GDOG...`;
+            swapButton.innerHTML = `${isBuyMode ? 'Buying' : 'Selling'}... <i class="fa fa-spinner fa-spin ml-2"></i>`;
+            status.innerText = `Executing ${isBuyMode ? 'buy' : 'sell'}...`;
+            document.getElementById('progressStatus').innerText = getRandomMessage(isBuyMode ? 'buyStart' : 'sellStart');
 
             try {
-                const gateReserves = await gatePairContract.methods.getReserves().call();
-                const gateToken0 = await gatePairContract.methods.token0().call();
-                const isGateGdogToken0 = gateToken0.toLowerCase() === GDOG.toLowerCase();
-                const gateReserveGdog = isGateGdogToken0 ? gateReserves[0] : gateReserves[1];
-                const gateReserveWgt = isGateGdogToken0 ? gateReserves[1] : gateReserves[0];
-
+                const gasPrice = await web3.eth.getGasPrice();
                 const slippagePercent = parseFloat(slippage) / 100;
-                const deadline = Math.floor(Date.now() / 1000) + 60 * 30;
+                const path = isBuyMode ? [WGT, GDOG] : [GDOG, WGT];
+                let estimatedGas, tx;
 
                 if (isBuyMode) {
                     const gtAmountWei = web3.utils.toWei(amount, 'ether');
-                    const amountOutMin = web3.utils.toBN(gtAmountWei)
-                        .mul(web3.utils.toBN(gateReserveGdog))
-                        .div(web3.utils.toBN(gateReserveWgt))
-                        .mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000)))
-                        .div(web3.utils.toBN(1000));
-
-                    const path = [WGT, GDOG];
-                    const tx = await gateRouterContract.methods.swapExactETHForTokens(
+                    const amountOutMin = '0'; // No output calculation, set to 0 for safety
+                    const gtBalance = await web3.eth.getBalance(account);
+                    if (web3.utils.toBN(gtBalance).lt(web3.utils.toBN(gtAmountWei))) {
+                        status.innerText = 'Insufficient GT balance';
+                        document.getElementById('progressStatus').innerText = getRandomMessage('insufficientBalance');
+                        return;
+                    }
+                    estimatedGas = await routerContract.methods.swapExactETHForTokensSupportingFeeOnTransferTokens(
                         amountOutMin,
                         path,
                         account,
-                        deadline
+                        Math.floor(Date.now() / 1000) + 60 * 20
+                    ).estimateGas({ from: account, value: gtAmountWei });
+                    const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                    if (web3.utils.toBN(gtBalance).lt(web3.utils.toBN(gtAmountWei).add(gasCost))) {
+                        status.innerText = 'Not enough GT for gas';
+                        document.getElementById('progressStatus').innerText = getRandomMessage('insufficientGas');
+                        return;
+                    }
+                    tx = await routerContract.methods.swapExactETHForTokensSupportingFeeOnTransferTokens(
+                        amountOutMin,
+                        path,
+                        account,
+                        Math.floor(Date.now() / 1000) + 60 * 20
                     ).send({
                         from: account,
                         value: gtAmountWei,
-                        gas: 300000
+                        gas: Math.min(estimatedGas * 2, 3000000),
+                        gasPrice
                     });
-
-                    status.innerText = '购买成功！';
-                    document.getElementById('progressStatus').innerText = `成功: ${tx.transactionHash}`;
+                    status.innerText = 'Buy successful!';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('buySuccess') + ` ${tx.transactionHash}`;
                 } else {
-                    const gdogAmountWei = web3.utils.toWei(amount, 'ether');
-                    const amountOutMin = web3.utils.toBN(gdogAmountWei)
-                        .mul(web3.utils.toBN(gateReserveWgt))
-                        .div(web3.utils.toBN(gateReserveGdog))
-                        .mul(web3.utils.toBN(Math.floor((1 - slippagePercent) * 1000)))
-                        .div(web3.utils.toBN(1000));
-
-                    const path = [GDOG, WGT];
-                    const tx = await gateRouterContract.methods.swapExactTokensForTokens(
-                        gdogAmountWei,
+                    const GDOGAmountWei = web3.utils.toBN(amount * 10); // GDOG: 1 decimal
+                    const amountOutMin = '0'; // No output calculation
+                    const GDOGBalance = await GDOGContract.methods.balanceOf(account).call();
+                    if (web3.utils.toBN(GDOGBalance).lt(GDOGAmountWei)) {
+                        status.innerText = 'Insufficient GDOG balance';
+                        document.getElementById('progressStatus').innerText = getRandomMessage('insufficientBalance');
+                        return;
+                    }
+                    const allowance = await GDOGContract.methods.allowance(account, GATE_ROUTER).call();
+                    if (web3.utils.toBN(allowance).lt(GDOGAmountWei)) {
+                        status.innerText = 'Please approve GDOG';
+                        document.getElementById('progressStatus').innerText = getRandomMessage('insufficientAllowance');
+                        return;
+                    }
+                    estimatedGas = await routerContract.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
+                        GDOGAmountWei,
                         amountOutMin,
                         path,
                         account,
-                        deadline
+                        Math.floor(Date.now() / 1000) + 60 * 20
+                    ).estimateGas({ from: account });
+                    const gasCost = web3.utils.toBN(gasPrice).mul(web3.utils.toBN(estimatedGas));
+                    const gtBalance = await web3.eth.getBalance(account);
+                    if (web3.utils.toBN(gtBalance).lt(gasCost)) {
+                        status.innerText = 'Not enough GT for gas';
+                        document.getElementById('progressStatus').innerText = getRandomMessage('insufficientGas');
+                        return;
+                    }
+                    tx = await routerContract.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(
+                        GDOGAmountWei,
+                        amountOutMin,
+                        path,
+                        account,
+                        Math.floor(Date.now() / 1000) + 60 * 20
                     ).send({
                         from: account,
-                        gas: 300000
+                        gas: Math.min(estimatedGas * 2, 3000000),
+                        gasPrice
                     });
-
-                    status.innerText = '出售成功！';
-                    document.getElementById('progressStatus').innerText = `成功: ${tx.transactionHash}`;
+                    status.innerText = 'Sell successful!';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('sellSuccess') + ` ${tx.transactionHash}`;
                 }
                 await checkBalances();
             } catch (error) {
                 if (error.code === 4001) {
-                    status.innerText = '用户取消交易';
-                    document.getElementById('progressStatus').innerText = '错误: 交易已取消';
+                    status.innerText = 'Transaction cancelled';
+                    document.getElementById('progressStatus').innerText = getRandomMessage('userDenied');
                 } else if (error.message.includes('insufficient funds')) {
-                    status.innerText = `余额不足以${isBuyMode ? '购买' : '出售'}`;
-                    document.getElementById('progressStatus').innerText = '错误: 余额不足';
-                } else if (error.message.includes('execution reverted')) {
-                    status.innerText = `交易被回滚`;
-                    document.getElementById('progressStatus').innerText = `错误: 回滚 - ${error.message}`;
+                    status.innerText = `Insufficient ${isBuyMode ? 'GT' : 'GDOG'} balance`;
+                    document.getElementById('progressStatus').innerText = getRandomMessage('insufficientBalance');
+                } else if (error.message.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {
+                    status.innerText = 'Slippage too low';
+                    document.getElementById('progressStatus').innerText = getRandomMessage(isBuyMode ? 'buyFail' : 'sellFail');
                 } else {
-                    status.innerText = `${isBuyMode ? '购买' : '出售'}失败`;
-                    document.getElementById('progressStatus').innerText = `错误: ${error.message}`;
+                    status.innerText = `${isBuyMode ? 'Buy' : 'Sell'} failed`;
+                    document.getElementById('progressStatus').innerText = getRandomMessage(isBuyMode ? 'buyFail' : 'sellFail') + ` ${error.message}`;
                 }
             } finally {
                 swapButton.disabled = false;
-                swapButton.innerHTML = isBuyMode ? '购买GDOG' : '出售GDOG';
+                swapButton.innerHTML = isBuyMode ? 'Buy GDOG' : 'Sell GDOG';
             }
         }
 
         function copyContract() {
-            const contract = '0xf6d9cf57e20ba0d33372e8998a9424aa53411e04';
+            const contract = '0xf6D9Cf57e20bA0d33372E8998A9424aa53411E04';
             navigator.clipboard.writeText(contract).then(() => {
                 const notification = document.createElement('div');
                 notification.className = 'fixed bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                notification.textContent = '合约地址已复制！';
+                notification.textContent = 'Contract address copied!';
                 document.body.appendChild(notification);
                 setTimeout(() => {
                     notification.style.opacity = '0';
@@ -386,8 +509,8 @@
         document.getElementById('connectWalletButton').addEventListener('click', initializeWeb3);
         document.getElementById('swapButton').addEventListener('click', swapGDOG);
         document.getElementById('approveButton').addEventListener('click', approveGDOG);
-        document.getElementById('amount').addEventListener('input', checkBalances);
-        document.getElementById('slipOOpage').addEventListener('input', checkBalances);
+        document.getElementById('amount').addEventListener('input', checkAllowance);
+        document.getElementById('slippage').addEventListener('input', checkAllowance);
 
         document.getElementById('buyModeButton').addEventListener('click', () => {
             isBuyMode = true;
@@ -395,11 +518,10 @@
             document.getElementById('buyModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
             document.getElementById('sellModeButton').classList.remove('bg-primary', 'text-white');
             document.getElementById('sellModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
-            document.getElementById('amountLabel').innerText = 'GT总量';
-            document.getElementById('amount').placeholder = '输入GT总量';
-            document.getElementById('swapButton').innerText = '购买GDOG';
-            document.getElementById('approveButton').classList.add('hidden');
-            checkBalances();
+            document.getElementById('amountLabel').innerText = 'Total GT Amount';
+            document.getElementById('amount').placeholder = 'Enter total GT amount';
+            document.getElementById('swapButton').innerText = 'Buy GDOG';
+            checkAllowance();
         });
 
         document.getElementById('sellModeButton').addEventListener('click', () => {
@@ -408,14 +530,15 @@
             document.getElementById('sellModeButton').classList.remove('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
             document.getElementById('buyModeButton').classList.remove('bg-primary', 'text-white');
             document.getElementById('buyModeButton').classList.add('bg-dark/80', 'border', 'border-secondary', 'text-secondary');
-            document.getElementById('amountLabel').innerText = 'GDOG总量';
-            document.getElementById('amount').placeholder = '输入GDOG总量';
-            document.getElementById('swapButton').innerText = '出售GDOG';
-            checkBalances();
+            document.getElementById('amountLabel').innerText = 'Total GDOG Amount';
+            document.getElementById('amount').placeholder = 'Enter total GDOG amount';
+            document.getElementById('swapButton').innerText = 'Sell GDOG';
+            checkAllowance();
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             checkBalances();
+            checkAllowance();
         });
 
         const menuToggle = document.getElementById('menuToggle');
